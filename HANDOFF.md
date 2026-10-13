@@ -1,0 +1,77 @@
+# Handoff — EDUEDfacts
+
+Updated 2026-10-12 (repo split). Read this first, then `EDFactsOutputPlan.md` (the plan) and
+`CLAUDE.md` (operating guide).
+
+## What this repo is now
+
+**EDFacts file production from Ed-Fi + EDU/Stadium.** Split out of GenerateExplorer on
+2026-10-12; its Generate wiki and SQL cache moved here (`wiki/generate/`, `sources/generate/`)
+and the repo was deleted on 2026-10-13. The Generate-to-Ed-Fi mapping registers (P0) and the
+Generate hidden-logic register were deleted at the split and are not recoverable (no remote).
+
+The target is a dbt extension package (`edu_ext_edfacts`) over `edu_wh` marts: spec-derived seeds for category sets, layouts and permitted values, a
+GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a reading source only.
+
+## Done
+
+| Plan phase | Result | Where |
+|---|---|---|
+| 0 — Freeze SY 2026-27 baseline | 94 specs (all v23.x, all Inactive at freeze) + 43 companion docs, SHA-256 manifest. FS112 dropped, none added | `wiki/reference/edfacts/2026-27/` |
+| 0 — Two-year delta | 83 specs editorial only, 11 with guidance changes, no layout changes; "metadata survey" → FS5002–FS5029 metadata collections | `wiki/analysis/EDFacts-2026-27-Delta.md` |
+| 1 — Generate hidden-logic pass | 336 rules the specs don't state; 39 SEA policy toggles. Headline kept in `EDFactsOutputPlan.md` Phase 1; register deleted at the split | — |
+| Field review (Opus manager + Sonnet workers) | 216 distinct fields, 88 shared (22 universal, 16 family-wide, 50 collection-specific); content reusable, positions per file | `wiki/analysis/EDFacts-2026-27-Shared-Fields.md`, `edfacts-2026-27-shared-fields.csv` |
+| 2 — Seeds + macros, FS052 | `tasks/build_edfacts_seeds.py` emits 4 seeds (byte-identical rebuild); `edfacts_counts` (GROUPING SETS + set/Total Indicator labels + zero-fill) and `edfacts_file` (header + fixed-width records); 3 spec tests. Fixture build: 21/21 pass, records 324 bytes, header 459 | `edu_ext_edfacts/` |
+| Synopsis page | One-page summary of the three analyses above | `wiki/analysis/EDFacts-2026-27-Findings.html`, published privately at https://claude.ai/artifact/2fVMftrtHYoBwWqYkaRVLa |
+
+## Next steps
+
+1. **Owner decisions E1, E2, E3, E5** (`EDFactsOutputPlan.md` §5). Defaults apply until changed:
+   Stadium-private package, Grand Bend sample ODS for validation, seeds for SEA answers +
+   earthmover for per-staff/org side-door data. (E5, stop the P0 waves, is settled: registers deleted.)
+2. **Finish Phase 2** (`.planning/` phase 06). FS052 is done (see table). Still open:
+   - Widen `SPECS` in `tasks/build_edfacts_seeds.py` spec by spec; its asserts flag each new shape
+     (FS029's per-level layouts, specs with no Total Indicator, multiple data-record tables).
+   - `edfacts_config` shaped to the FS5002–FS5029 metadata collections, one column per SEA policy
+     answer. Derive the columns per collection from the specs and the Generate wiki. For FS052
+     that means the MEMBERDTE count date and the CCDGRADE13, CCDUNGRADED and ADULTEDU grade
+     toggles, which today come in through the `exclude_values` argument.
+   - `xwalk_edfacts_*` seeds, pre-filled from the Ed-Fi 6.1 default descriptors in
+     `wiki/reference/ed-fi/6.1.0/`.
+   - Not implemented yet: `-1` missing counts. LEA/school zero-fill also ignores FS039 grades
+     offered, so it emits zero rows for grades a school doesn't offer.
+     That belongs in the Phase 3 population model.
+3. **Phase 3 — vertical slices:** FS052+FS039, FS002/FS089, FS029 end to end on sample Ed-Fi data.
+4. **Apply the SY 2026-27 guidance changes** when building those files: FS118 cumulative count,
+   FS195 once-per-shared-time-school, FS113/FS125 program-type zero exceptions, FS127 count type,
+   assessment zero counts (`wiki/analysis/EDFacts-2026-27-Delta.md`).
+5. **When files go Active:** re-run the fetch (below) for spec revisions and the SY 2026-27 BRSI.
+
+## Gotchas
+
+- **ed.gov refuses every non-browser client** (curl, PowerShell, headless Chrome, WebFetch → 403
+  or a WAF page). Refresh with `tasks/fetch_edgov_via_chrome.ps1` (visible Chrome over the
+  DevTools protocol, launched from WSL via `powershell.exe Start-Process` with
+  `--remote-debugging-port=9223`), pacing ~4 s per file, then `tasks/freeze_edfacts_catalog.py <year>`.
+  Never hand-edit files under `wiki/reference/` (checksummed).
+- **Remote:** https://github.com/roshd87/EDUEDfactsExploration (public, added 2026-10-13; local-only before that). The frozen federal documents under `wiki/reference/edfacts/<year>/`, the Ed-Fi schema tarball, and `sources/generate/` are git-ignored and live only on disk (manifests and READMEs stay tracked). Local `main` history still contains them; the published branch is a snapshot without that history.
+- **dbt package macros:** a root project only sees them namespaced (`edu_ext_edfacts.x`), and
+  that holds for calls between the package's own macros too. Each `ref()` must run at parse time,
+  outside any `if execute` guard, or dbt can't infer the dependency.
+- Generate defects that make files empty or wrong as shipped are catalogued in
+  `wiki/generate/repo/Source-Code-Oddities.md`; check there before porting
+  Generate logic.
+- `tasks/reports/federal-normalized-*.csv` and `federal-record-layout.csv` are frozen SY 2025-26
+  lineage; their normalizer was P0 tooling and was deleted. Re-normalize from `tasks/reports/2026-27/`.
+- `tasks/extract_federal_table_cells.py` works only with `--all`; its default mode read a deleted
+  P0 file.
+
+## Rebuild commands
+
+```sh
+python3 tasks/extract_federal_table_cells.py --year 2026-27 --all --out-dir tasks/reports/2026-27
+python3 tasks/build_federal_delta.py 2025-26 2026-27
+python3 tasks/reports/field-review/validate_shards.py
+python3 tasks/reports/field-review/consolidate_shared_fields.py
+python3 tasks/build_edfacts_seeds.py --year 2026-27  # seeds; then dbt build per edu_ext_edfacts/README.md
+```

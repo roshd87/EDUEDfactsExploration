@@ -1,0 +1,4 @@
+file_spec_id,file_spec_version,org_level,file_type,table_name,file_name_token,level_abbr,reporting_period,header_length,data_length,count_column
+FS052,v23.0,SEA,SEA MEMBERSHIP TABLE,MEMBER,MEMBERSHP,SEA,2026-2027,459,324,student_count
+FS052,v23.0,LEA,LEA MEMBERSHIP TABLE,MEMBER,MEMBERSHP,LEA,2026-2027,459,324,student_count
+FS052,v23.0,School,SCHOOL MEMBERSHIP TABLE,MEMBER,MEMBERSHP,SCH,2026-2027,459,324,student_count

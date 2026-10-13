@@ -1,0 +1,6 @@
+edu_ext_edfacts_integration_tests:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: edfacts.duckdb

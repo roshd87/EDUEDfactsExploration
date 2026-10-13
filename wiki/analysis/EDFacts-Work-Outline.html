@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDFacts Files from Ed-Fi and EDU: Work Outline</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f7f8fa; --surface: #ffffff; --fg: #1b2230; --muted: #5b6577; --rule: #d6dbe3;
+  --accent: #1f4e8c; --accent-soft: #e4ecf7;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
+          --accent: #8db4ec; --accent-soft: #1d2f4a; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font-body); padding: 2.5rem 16px 4rem; }
+main { max-width: 76ch; margin-inline: auto; display: grid; gap: 1.5rem; }
+h1, h2 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 600; }
+h2 { font-size: 1.05rem; font-weight: 600; color: var(--accent); border-top: 1px solid var(--rule); padding-top: .75rem; }
+section { display: grid; gap: .5rem; }
+header { display: grid; gap: .4rem; }
+.eyebrow { font: 500 .72rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.meta { color: var(--muted); font-size: .88rem; }
+ul { margin: 0; padding-left: 1.25rem; }
+li { margin: .2rem 0; }
+li + li { margin-top: .3rem; }
+code { font-family: var(--font-mono); font-size: .9em; background: var(--accent-soft); padding: 0 .3em; border-radius: 3px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+@media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+@media print { body { padding: 0; font-size: 11pt; } main { gap: .9rem; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="eyebrow"></div>
+  <h1>EDFacts Files from Ed-Fi and EDU: Work Outline</h1>
+  <div class="meta">Baseline SY 2026-27 · Pre-planning, as of 2026-10-13</div>
+</header>
+
+<section>
+  <h2>Objective</h2>
+  <ul>
+    <li>Make EDFacts files that EDPass accepts.</li>
+    <li>Use the EDU warehouse as the only data source at run time. The warehouse holds Ed-Fi ODS data.</li>
+    <li>Ship the work as one dbt extension package, <code>edu_ext_edfacts</code>. Any Stadium partner can install it.</li>
+    <li>Read CEDS Generate for business rules only. Do not run Generate.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Sources of truth</h2>
+  <ul>
+    <li>The EDFacts file specifications for SY 2026-27 give the file content. The repo keeps a checksummed copy.</li>
+    <li>The EDFacts Workbook, the Business Rules Single Inventory (BRSI), and the EDPass metadata guides give the edit checks.</li>
+    <li>Ed-Fi Data Standard 6.1.0 gives the source schema and the initial descriptor values only.</li>
+    <li>Each Stadium and Ed-Fi implementation has state-specific descriptors. Do not assume a static descriptor set. Read the descriptors from each state implementation.</li>
+    <li>The dbt docs for each Stadium deployment give the model map for that state. Some states have state-specific models that hold EDFacts data. Read the dbt docs for each state.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Background investigation complete</h2>
+  <ul>
+    <li>No build work has started. The items below are investigation results that the plan uses.</li>
+    <li>The SY 2026-27 catalog is frozen: 94 specifications and 43 companion documents, with a manifest.</li>
+    <li>SY 2025-26 and SY 2026-27 are compared. No record layout changed. Eleven specifications changed guidance.</li>
+    <li>A read of all Generate SQL found 336 rules the specifications do not state. The Generate wiki keeps the domain notes. A rule-by-rule register is not kept.</li>
+    <li>A field review of all 94 specifications is complete. 88 fields are shared between files.</li>
+    <li>The seed builder makes four seed families from the specifications: category sets, layouts, permitted values, and file headers.</li>
+    <li>The count macro makes GROUPING SETS queries from the category-set seed. It adds Total Indicator rows and zero rows.</li>
+    <li>The file macro makes the header and the fixed-width records.</li>
+    <li>FS052 Membership renders from seeds alone, as a proof of shape. The fixture build passes 21 of 21 tests.</li>
+  </ul>
+</section>
+
+<div class="two">
+<section>
+  <h2>Phase 1: build the seeds and macros</h2>
+  <ul>
+    <li>Add each specification to the seed builder allowlist, one at a time. Correct the builder when its asserts show a new shape.</li>
+    <li>Make the <code>edfacts_config</code> seed. Give it one column for each SEA policy answer in the FS5002 to FS5029 metadata collections.</li>
+    <li>Make the <code>xwalk_edfacts_*</code> seeds. Start from the Ed-Fi 6.1 default descriptors. Add each state's own descriptors from its implementation. Review the map with the state.</li>
+    <li>Add the missing-count value of -1 to the count macro.</li>
+    <li>Add the BRSI edit checks that SQL can express as dbt tests.</li>
+    <li><strong>Optional:</strong> rebuild the Generate rule register. Do fieldwork with the first state to assess the need. Rebuild the register only if the specifications and the Generate wiki do not answer the open rules.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Phase 2: build three vertical slices</h2>
+  <ul>
+    <li>Read the dbt docs for the target state first. Find the models that hold each EDFacts input.</li>
+    <li>Build the Membership slice: FS052 and FS039. Use the student school association on the count date.</li>
+    <li>Build the IDEA Child Count slice: FS002 and FS089. Use special education program eligibility on the count date.</li>
+    <li>Build the Directory slice: FS029 at SEA, LEA, and school level. Use organization attributes and status changes.</li>
+    <li>Run each slice on the Grand Bend sample ODS. No partner data is necessary.</li>
+    <li>Make sure each file passes every BRSI check that SQL can express. Make sure each record length agrees with the layout seed.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Phase 3: roll out by collection</h2>
+  <ul>
+    <li>Ship one wave for each collection group, in this order: CCD organization, IDEA student, staff, program participation, outcomes, assessment, finance.</li>
+    <li>Apply the SY 2026-27 guidance changes to FS118, FS195, FS113, FS125, FS127, and the assessment files.</li>
+    <li>Get staff qualification data from a side door before you build the staff wave. Ed-Fi core does not hold it.</li>
+    <li>Get finance amounts and organization governance data from seeds or a side door.</li>
+    <li>Build the 12 SEA administrative files last, from a plain seed-to-file path.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Phase 4: deploy to Stadium</h2>
+  <ul>
+    <li>Release the package with a version number.</li>
+    <li>Give the partner the <code>edfacts_config</code> and <code>xwalk_edfacts_*</code> seeds to fill.</li>
+    <li>Add one Airflow task to the partner DAG. The task runs the <code>edfacts</code> tag and exports each file model to the state drop location.</li>
+    <li>Select the reporting year with one dbt variable.</li>
+    <li>Make sure one partner makes its Active-set files from its own warehouse and EDPass accepts them.</li>
+  </ul>
+</section>
+</div>
+
+<div class="two">
+<section>
+  <h2>Decisions the owner must make</h2>
+  <ul>
+    <li><strong>E1:</strong> Keep the package private to Stadium, or publish it. Default: private until Phase 2 proves the shape.</li>
+    <li><strong>E2:</strong> Select the first partner for validation data. Default: Grand Bend sample ODS only.</li>
+    <li><strong>E3:</strong> Select the entry point for non-Ed-Fi data. Default: seeds for SEA answers, earthmover for staff and organization data.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Out of scope</h2>
+  <ul>
+    <li>Do not run Generate, SQL Server, or CEDS at run time.</li>
+    <li>Do not automate the EDPass submission. EDPass has no public API.</li>
+    <li>Do not make state files that are not EDFacts files.</li>
+    <li>Do not change the Ed-Fi ODS or API.</li>
+  </ul>
+</section>
+</div>
+</main>
+</body>
+</html>

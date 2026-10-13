@@ -1,0 +1,13 @@
+__pycache__/
+.gsd/
+.obsidian/
+
+# Not published to GitHub (kept on disk; see HANDOFF.md). Frozen federal documents,
+# the Ed-Fi schema tarball, and the CEDS Generate SQL cache.
+wiki/reference/edfacts/*/file-specifications/
+wiki/reference/edfacts/*/business-rules/
+wiki/reference/edfacts/*/metadata/
+wiki/reference/edfacts/*/workbook/
+wiki/reference/edfacts/*/general/
+wiki/reference/ed-fi/6.1.0/Ed-Fi-Data-Standard-v6.1.0.tar.gz
+sources/generate/

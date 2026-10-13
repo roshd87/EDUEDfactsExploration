@@ -1,0 +1,30 @@
+file_spec_id,file_spec_version,category,column_name,code,label,sort_order
+FS052,v23.0,Grade Level (Membership),grade_level_membership,PK,Pre-Kindergarten,1
+FS052,v23.0,Grade Level (Membership),grade_level_membership,KG,Kindergarten,2
+FS052,v23.0,Grade Level (Membership),grade_level_membership,01,Grade 1,3
+FS052,v23.0,Grade Level (Membership),grade_level_membership,02,Grade 2,4
+FS052,v23.0,Grade Level (Membership),grade_level_membership,03,Grade 3,5
+FS052,v23.0,Grade Level (Membership),grade_level_membership,04,Grade 4,6
+FS052,v23.0,Grade Level (Membership),grade_level_membership,05,Grade 5,7
+FS052,v23.0,Grade Level (Membership),grade_level_membership,06,Grade 6,8
+FS052,v23.0,Grade Level (Membership),grade_level_membership,07,Grade 7,9
+FS052,v23.0,Grade Level (Membership),grade_level_membership,08,Grade 8,10
+FS052,v23.0,Grade Level (Membership),grade_level_membership,09,Grade 9,11
+FS052,v23.0,Grade Level (Membership),grade_level_membership,10,Grade 10,12
+FS052,v23.0,Grade Level (Membership),grade_level_membership,11,Grade 11,13
+FS052,v23.0,Grade Level (Membership),grade_level_membership,12,Grade 12,14
+FS052,v23.0,Grade Level (Membership),grade_level_membership,13,Grade 13,15
+FS052,v23.0,Grade Level (Membership),grade_level_membership,UG,Ungraded,16
+FS052,v23.0,Grade Level (Membership),grade_level_membership,AE,Adult Education,17
+FS052,v23.0,Grade Level (Membership),grade_level_membership,MISSING,Missing,18
+FS052,v23.0,Sex (Membership),sex_membership,F,Female,1
+FS052,v23.0,Sex (Membership),sex_membership,M,Male,2
+FS052,v23.0,Sex (Membership),sex_membership,MISSING,Missing,3
+FS052,v23.0,Racial Ethnic,racial_ethnic,AM7,American Indian or Alaska Native,1
+FS052,v23.0,Racial Ethnic,racial_ethnic,AS7,Asian,2
+FS052,v23.0,Racial Ethnic,racial_ethnic,BL7,Black or African American,3
+FS052,v23.0,Racial Ethnic,racial_ethnic,HI7,Hispanic/Latino,4
+FS052,v23.0,Racial Ethnic,racial_ethnic,PI7,Native Hawaiian or Other Pacific Islander,5
+FS052,v23.0,Racial Ethnic,racial_ethnic,MU7,Two or more races,6
+FS052,v23.0,Racial Ethnic,racial_ethnic,WH7,White,7
+FS052,v23.0,Racial Ethnic,racial_ethnic,MISSING,Missing,8

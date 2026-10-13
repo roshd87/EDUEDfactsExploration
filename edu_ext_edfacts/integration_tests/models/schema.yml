@@ -1,0 +1,23 @@
+version: 2
+models:
+  - name: fs052_sea_counts
+    data_tests:
+      - edu_ext_edfacts.edfacts_conforms: {fs: FS052, org_level: SEA}
+      - edu_ext_edfacts.edfacts_sets_sum_to_total: {fs: FS052, org_level: SEA}
+  - name: fs052_sea_file
+    data_tests:
+      - edu_ext_edfacts.edfacts_record_lengths: {fs: FS052, org_level: SEA}
+  - name: fs052_lea_counts
+    data_tests:
+      - edu_ext_edfacts.edfacts_conforms: {fs: FS052, org_level: LEA}
+      - edu_ext_edfacts.edfacts_sets_sum_to_total: {fs: FS052, org_level: LEA}
+  - name: fs052_lea_file
+    data_tests:
+      - edu_ext_edfacts.edfacts_record_lengths: {fs: FS052, org_level: LEA}
+  - name: fs052_school_counts
+    data_tests:
+      - edu_ext_edfacts.edfacts_conforms: {fs: FS052, org_level: School}
+      - edu_ext_edfacts.edfacts_sets_sum_to_total: {fs: FS052, org_level: School}
+  - name: fs052_school_file
+    data_tests:
+      - edu_ext_edfacts.edfacts_record_lengths: {fs: FS052, org_level: School}

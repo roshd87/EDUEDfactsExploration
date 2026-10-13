@@ -1,0 +1,501 @@
+file_spec_id,file_spec_version,record_kind,organization_level,sequence,field_name,technical_name_or_xml_tag,start_position,length,data_type_or_format,requiredness,definition_text,permitted_values_summary,category_role,source_locator
+FS002,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISABILITIES;LEA CHILDREN WITH DISABILITIES;SCHOOL CHILDREN WITH DISABILITIES,control,header-record-definition#t16r1
+FS002,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t16r2
+FS002,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t16r3
+FS002,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t16r4
+FS002,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t16r5
+FS002,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t16r6
+FS002,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t16r7
+FS002,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t18r1
+FS002,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t18r2
+FS002,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t18r3
+FS002,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t18r4
+FS002,v23.0,data,all,5,DG5 School Identifier (State),DG5,29,20,String,M,The identifier assigned to a school by the state education agency (SEA). Also known as the State School Identification Number (ID). This ID cannot be updated through this file.,SEA level – Blank;LEA level - Blank,identifier,data-record-definition#t18r5
+FS002,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in sections 2.2 and 2.3.,IDEADISAB,other,data-record-definition#t18r6
+FS002,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r7
+FS002,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t18r8
+FS002,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t18r9
+FS002,v23.0,data,all,10,Filler,,114,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r10
+FS002,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r11
+FS002,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r12
+FS002,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r13
+FS002,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r14
+FS002,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r15
+FS002,v23.0,data,all,16,Disability Category (IDEA),,204,15,String,A,The primary disability as identified in the Individualized Education Program (IEP) or service plan.,AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t18r16
+FS002,v23.0,data,all,17,Filler,,219,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r17
+FS002,v23.0,data,all,18,Filler,,234,15,String,M,Leave filler field blank.,,filler,data-record-definition#t18r18
+FS002,v23.0,data,all,19,Age (School Age),,249,15,String,A,The discrete age of children (students) who are school age on the state specified child count date.,AGE05K;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;MISSING,category,data-record-definition#t18r19
+FS002,v23.0,data,all,20,Educational Environment (IDEA) SA,,264,15,String,A,The settings in which school-aged children ages 5 who are in kindergarten through 21 receive special education and related services.,RC80;RC79TO40;RC39;SS;RF;HH;CF;PPPS;MISSING,category,data-record-definition#t18r20
+FS002,v23.0,data,all,21,English Learner Status (Both),,279,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t18r21
+FS002,v23.0,data,all,22,Total Indicator,,294,1,String,M,An indicator that defines the count level – see tables 2.2-2 and 2.3-2 Required Categories and Totals,N;Y,total,data-record-definition#t18r22
+FS002,v23.0,data,all,23,Explanation,,295,200,String,O,Text field for state use.,,explanation,data-record-definition#t18r23
+FS002,v23.0,data,all,24,Student Count,,495,10,Integer,M,,,count,data-record-definition#t18r24
+FS002,v23.0,data,all,25,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,data-record-definition#t18r25
+FS005,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISAB (IDEA) DISCIPLINE;LEA CHILDREN WITH DISAB (IDEA) DISCIPLINE,control,header-record-definition#t13r1
+FS005,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t13r2
+FS005,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t13r3
+FS005,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t13r4
+FS005,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t13r5
+FS005,v23.0,header,all,6,Filler,,127,333,String,M,Leave filler field blank.,,filler,header-record-definition#t13r6
+FS005,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,header-record-definition#t13r7
+FS005,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t15r1
+FS005,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t15r2
+FS005,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t15r3
+FS005,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t15r4
+FS005,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t15r5
+FS005,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,CHDISDSPL,other,data-record-definition#t15r6
+FS005,v23.0,data,all,7,Sex (Membership),,69,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t15r7
+FS005,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;MU7;WH7;MISSING,category,data-record-definition#t15r8
+FS005,v23.0,data,all,9,English Learner Status (Both),,99,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t15r9
+FS005,v23.0,data,all,10,Filler,,114,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r10
+FS005,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r11
+FS005,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r12
+FS005,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r13
+FS005,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r14
+FS005,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r15
+FS005,v23.0,data,all,16,Disability Category (IDEA),,204,15,String,A,The primary disability as identified in the Individualized Education Program (IEP) or service plan.,AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t15r16
+FS005,v23.0,data,all,17,Filler,,219,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r17
+FS005,v23.0,data,all,18,Interim Removal (IDEA),,234,15,String,M,The types of interim removal from current educational setting experienced by children with disabilities (IDEA).,REMDW;REMHO;MISSING,category,data-record-definition#t15r18
+FS005,v23.0,data,all,19,Total Indicator,,249,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t15r19
+FS005,v23.0,data,all,20,Explanation,,250,200,String,O,Text field for state use.,,explanation,data-record-definition#t15r20
+FS005,v23.0,data,all,21,Student Count,,450,10,Integer,M,,,count,data-record-definition#t15r21
+FS005,v23.0,data,all,22,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,data-record-definition#t15r22
+FS006,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISAB (IDEA) MULTI SUSPEN EXPU;LEA CHILDREN WITH DISAB (IDEA) MULTI SUSPEN EXPU,control,header-record-definition#t14r1
+FS006,v23.0,header,all,2,Total Records In File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t14r2
+FS006,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t14r3
+FS006,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t14r4
+FS006,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t14r5
+FS006,v23.0,header,all,6,Filler,,127,333,String,M,Leave filler field blank.,,filler,header-record-definition#t14r6
+FS006,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,header-record-definition#t14r7
+FS006,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t16r1
+FS006,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t16r2
+FS006,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t16r3
+FS006,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t16r4
+FS006,v23.0,data,all,5,Filler,,29,20,String,M,Leave Filler Field Blank,,filler,data-record-definition#t16r5
+FS006,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEASUSEXPL,other,data-record-definition#t16r6
+FS006,v23.0,data,all,7,Removal Length (Suspensions/ Expulsions),,69,15,String,M,The cumulative number of days children with disabilities (IDEA) were suspended or expelled during the school year for disciplinary reasons.,LTOREQ10;GREATER10;MISSING,category,data-record-definition#t16r7
+FS006,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;MU7;WH7;MISSING,category,data-record-definition#t16r8
+FS006,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t16r9
+FS006,v23.0,data,all,10,Filler,,114,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r10
+FS006,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r11
+FS006,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r12
+FS006,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r13
+FS006,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r14
+FS006,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r15
+FS006,v23.0,data,all,16,Disability Category (IDEA),,204,15,String,A,"The primary disability as identified in the Individualized Education Program (IEP), Individualized Family Service Plan (IFSP), or service plan.",AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t16r16
+FS006,v23.0,data,all,17,English Learner Status (Both),,219,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t16r17
+FS006,v23.0,data,all,18,Discipline Method (Suspension/ Expulsion),,234,15,String,M,The types of suspension or expulsion used for the discipline of children with disabilities.,INSCHOOL;OUTOFSCHOOL;MISSING,category,data-record-definition#t16r18
+FS006,v23.0,data,all,19,Total Indicator,,249,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t16r19
+FS006,v23.0,data,all,20,Explanation,,250,200,String,O,Text field for state use.,,explanation,data-record-definition#t16r20
+FS006,v23.0,data,all,21,Student Count,,450,10,Integer,M,,,count,data-record-definition#t16r21
+FS006,v23.0,data,all,22,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,data-record-definition#t16r22
+FS007,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISAB (IDEA) REMOVAL;LEA CHILDREN WITH DISAB (IDEA) REMOVAL,control,header-record-definition#t13r1
+FS007,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t13r2
+FS007,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t13r3
+FS007,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t13r4
+FS007,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t13r5
+FS007,v23.0,header,all,6,Filler,,127,333,String,M,Leave filler field blank.,,filler,header-record-definition#t13r6
+FS007,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,header-record-definition#t13r7
+FS007,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t15r1
+FS007,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t15r2
+FS007,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t15r3
+FS007,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t15r4
+FS007,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t15r5
+FS007,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEAREMOV,other,data-record-definition#t15r6
+FS007,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r7
+FS007,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;MU7;WH7;MISSING,category,data-record-definition#t15r8
+FS007,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t15r9
+FS007,v23.0,data,all,10,Filler,,114,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r10
+FS007,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r11
+FS007,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r12
+FS007,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r13
+FS007,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r14
+FS007,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r15
+FS007,v23.0,data,all,16,Disability Category (IDEA),,204,15,String,A,The primary disability as identified in the Individualized Education Program (IEP) or service plan.,AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t15r16
+FS007,v23.0,data,all,17,English Learner Status (Both),,219,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t15r17
+FS007,v23.0,data,all,18,Interim Removal Reason (IDEA),,234,15,String,M,The reasons why children with disabilities (IDEA) were unilaterally removed from their current educational placement to an interim alternative educational setting.,D;W;SBI;MISSING,category,data-record-definition#t15r18
+FS007,v23.0,data,all,19,Total Indicator,,249,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t15r19
+FS007,v23.0,data,all,20,Explanation,,250,200,String,O,Text field for state use.,,explanation,data-record-definition#t15r20
+FS007,v23.0,data,all,21,Event Count,,450,10,Integer,M,,,count,data-record-definition#t15r21
+FS007,v23.0,data,all,22,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,data-record-definition#t15r22
+FS009,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISAB (IDEA) EXITING SPEC ED;LEA CHILDREN WITH DISAB (IDEA) EXITING SPEC ED,control,header-record-definition#t13r1
+FS009,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t13r2
+FS009,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t13r3
+FS009,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t13r4
+FS009,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is “CCYY–CCYY” or “CCYY CCYY”, where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t13r5
+FS009,v23.0,header,all,6,Filler,,127,393,String,M,Leave filler field blank.,,filler,header-record-definition#t13r6
+FS009,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,520,1,,M,,,control,header-record-definition#t13r7
+FS009,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t15r1
+FS009,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t15r2
+FS009,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t15r3
+FS009,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t15r4
+FS009,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t15r5
+FS009,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEAEXITSPED,other,data-record-definition#t15r6
+FS009,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r7
+FS009,v23.0,data,all,8,Racial /Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t15r8
+FS009,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t15r9
+FS009,v23.0,data,all,10,Filler,,114,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r10
+FS009,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r11
+FS009,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r12
+FS009,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r13
+FS009,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r14
+FS009,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r15
+FS009,v23.0,data,all,16,Disability Category (IDEA) Exiting,,204,15,String,A,The primary disability as identified in the Individualized Education Program (IEP).,AUT;DB;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t15r16
+FS009,v23.0,data,all,17,Age (Exiting),,219,15,String,A,The discrete age of children (students) on the date of the most recent IDEA child count prior to exiting special education.,14;15;16;17;18;19;20;21;MISSING,category,data-record-definition#t15r17
+FS009,v23.0,data,all,18,English Learner Status (Both),,234,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t15r18
+FS009,v23.0,data,all,19,Filler,,249,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r19
+FS009,v23.0,data,all,20,Filler,,264,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r20
+FS009,v23.0,data,all,21,Filler,,279,15,String,M,Leave filler field blank.,,filler,data-record-definition#t15r21
+FS009,v23.0,data,all,22,Basis of Exit,,294,15,String,A,"The reason children who were in special education at the start of the reporting period, but were not in special education at the end of the reporting period.",GHS;GRADALTDPL;RC;RMA;MKC;TRAN;DROPOUT;D;MISSING,category,data-record-definition#t15r22
+FS009,v23.0,data,all,23,Total Indicator,,309,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t15r23
+FS009,v23.0,data,all,24,Explanation,,310,200,String,O,Text field for state use.,,explanation,data-record-definition#t15r24
+FS009,v23.0,data,all,25,Student Count,,510,10,Integer,M,,,count,data-record-definition#t15r25
+FS009,v23.0,data,all,26,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,520,1,,M,,,control,data-record-definition#t15r26
+FS088,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISABILITIES (IDEA) DISCIP ACT;LEA CHILDREN WITH DISABILITIES (IDEA) DISCIP ACT,control,header-record-definition#t13r1
+FS088,v23.0,header,all,2,Total Records In File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t13r2
+FS088,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t13r3
+FS088,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t13r4
+FS088,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t13r5
+FS088,v23.0,header,all,6,Filler,,127,333,String,M,Leave filler field blank.,,filler,header-record-definition#t13r6
+FS088,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,header-record-definition#t13r7
+FS088,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t15r1
+FS088,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t15r2
+FS088,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t15r3
+FS088,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t15r4
+FS088,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t15r5
+FS088,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,CHWDSBDSPACT,other,data-record-definition#t15r6
+FS088,v23.0,data,all,7,Sex (Membership),,69,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t15r7
+FS088,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t15r8
+FS088,v23.0,data,all,9,Removal Length (IDEA),,99,15,String,A,The cumulative number of days children with disabilities (IDEA) were removed from their current educational setting during the school year.,LTOREQ1;2TO10;GREATER10,category,data-record-definition#t15r9
+FS088,v23.0,data,all,10,Disability Category (IDEA),,114,15,String,A,The primary disability as identified in the Individualized Education Program (IEP) or service plan.,AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t15r10
+FS088,v23.0,data,all,11,English Learner Status (Both),,129,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t15r11
+FS088,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t15r12
+FS088,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t15r13
+FS088,v23.0,data,all,14,Student Count,,345,10,Integer,M,,,count,data-record-definition#t15r14
+FS088,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t15r15
+FS089,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISABILITIES (IDEA) EC;LEA CHILDREN WITH DISABILITIES (IDEA) EC,control,header-record-definition#t14r1
+FS089,v23.0,header,all,2,Total Records In File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t14r2
+FS089,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t14r3
+FS089,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t14r4
+FS089,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t14r5
+FS089,v23.0,header,all,6,Filler,,127,363,String,M,Leave filler field blank.,,filler,header-record-definition#t14r6
+FS089,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,490,1,,M,,,control,header-record-definition#t14r7
+FS089,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t16r1
+FS089,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t16r2
+FS089,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t16r3
+FS089,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t16r4
+FS089,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t16r5
+FS089,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,CHWDSBERLCHD,other,data-record-definition#t16r6
+FS089,v23.0,data,all,7,Racial Ethnic,,69,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;MU7;WH7;MISSING,category,data-record-definition#t16r7
+FS089,v23.0,data,all,8,Sex (Membership),,84,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t16r8
+FS089,v23.0,data,all,9,Age (Early Childhood),,99,15,String,A,The discrete age of children (students) who are in early childhood on the state specified child count date.,3;4;AGE05NOTK;MISSING,category,data-record-definition#t16r9
+FS089,v23.0,data,all,10,English Learner Status (Both),,114,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t16r10
+FS089,v23.0,data,all,11,Disability Category (IDEA),,129,15,String,A,"The primary disability as identified in the Individualized Education Program (IEP), Individualized Family Service Plan (IFSP), or service plan.",AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t16r11
+FS089,v23.0,data,all,12,Filler,,144,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r12
+FS089,v23.0,data,all,13,Filler,,159,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r13
+FS089,v23.0,data,all,14,Filler,,174,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r14
+FS089,v23.0,data,all,15,Filler,,189,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r15
+FS089,v23.0,data,all,16,Filler,,204,15,String,M,Leave filler field blank.,,filler,data-record-definition#t16r16
+FS089,v23.0,data,all,17,Educational Environment (IDEA) EC,,219,60,String,A,The programs in which children ages 3 through 5 attend and the setting in which these children receive special education and related services.,REC10YSVCS;REC10YOTHLOC;REC09YSVCS;REC09YOTHLOC;SC;SS;RF;H;SPL;MISSING,category,data-record-definition#t16r17
+FS089,v23.0,data,all,18,Total Indicator,,279,1,String,M,An indicator that defines the count level – see table 2.3-1 Required Categories and Totals,N;Y,total,data-record-definition#t16r18
+FS089,v23.0,data,all,19,Explanation,,280,200,String,O,Text field for state use.,,explanation,data-record-definition#t16r19
+FS089,v23.0,data,all,20,Student Count,,480,10,Integer,M,,,count,data-record-definition#t16r20
+FS089,v23.0,data,all,21,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,490,1,,M,,,control,data-record-definition#t16r21
+FS143,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILDREN WITH DISAB (IDEA) TOTAL DISC REMOVAL;LEA CHILDREN WITH DISAB (IDEA) TOTAL DISC REMOVAL,control,header-record-definition#t12r1
+FS143,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS143,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS143,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS143,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS143,v23.0,header,all,6,Filler,,127,333,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS143,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,460,1,,M,,,control,header-record-definition#t12r7
+FS143,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS143,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS143,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t14r3
+FS143,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t14r4
+FS143,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t14r5
+FS143,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,CWDTOTDISREM,other,data-record-definition#t14r6
+FS143,v23.0,data,all,7,Sex (Membership),,69,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t14r7
+FS143,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;MU7;WH7;MISSING,category,data-record-definition#t14r8
+FS143,v23.0,data,all,9,English Learner Status (Both),,99,15,String,A,An indication of whether students met the definition of an English learner.,LEP;NLEP;MISSING,category,data-record-definition#t14r9
+FS143,v23.0,data,all,10,Disability Category (IDEA),,114,15,String,A,The primary disability as identified in the Individualized Education Program (IEP) or service plan.,AUT;DB;DD;EMN;HI;ID;MD;OI;SLD;SLI;TBI;VI;OHI;MISSING,category,data-record-definition#t14r10
+FS143,v23.0,data,all,11,Filler,,129,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r11
+FS143,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 Required Categories and Totals,N;Y,total,data-record-definition#t14r12
+FS143,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS143,v23.0,data,all,14,Event Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS143,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15
+FS144,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA EDUCATIONAL SERVICES;LEA EDUCATIONAL SERVICES,control,header-record-definition#t10r1
+FS144,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of Data Records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t10r2
+FS144,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t10r3
+FS144,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t10r4
+FS144,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is “CCYY–CCYY” or “CCYY CCYY”, where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t10r5
+FS144,v23.0,header,all,6,Filler,,127,198,String,M,Leave filler field blank.,,filler,header-record-definition#t10r6
+FS144,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,325,1,,M,,,control,header-record-definition#t10r7
+FS144,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t12r1
+FS144,v23.0,data,all,2,DG 559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t12r2
+FS144,v23.0,data,all,3,DG 570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t12r3
+FS144,v23.0,data,all,4,DG4 LEA Identifier (State),DG4,15,14,String,M,The identifier assigned to a local education agency (LEA) by the state education agency (SEA). Also known as State LEA Identification Number (ID). This data element cannot be updated through this file.,SEA level – Blank,identifier,data-record-definition#t12r4
+FS144,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t12r5
+FS144,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,EDUSERVICES,other,data-record-definition#t12r6
+FS144,v23.0,data,all,7,Disability Status (IDEA),,69,15,String,M,An indication of whether children (students) are children with disabilities (IDEA).,WODIS;WDIS;MISSING,category,data-record-definition#t12r7
+FS144,v23.0,data,all,8,Educational Services,,84,15,String,M,An indication of whether children (students) received educational services when removed from the regular school for disciplinary reasons.,SERVPROV;SERVNOTPROV,category,data-record-definition#t12r8
+FS144,v23.0,data,all,9,Filler,,99,15,String,M,Leave filler field blank.,,filler,data-record-definition#t12r9
+FS144,v23.0,data,all,10,Total Indicator,,114,1,String,M,An indicator that defines the count level. See table 2.3-1 Required Categories and Totals,N,total,data-record-definition#t12r10
+FS144,v23.0,data,all,11,Explanation,,115,200,String,O,Text field for state use.,,explanation,data-record-definition#t12r11
+FS144,v23.0,data,all,12,Student Count,,315,10,Integer,M,,,count,data-record-definition#t12r12
+FS144,v23.0,data,all,13,Carriage Return / Line Feed (CRLF)or Line Feed (LF),,325,1,,M,,,control,data-record-definition#t12r13
+FS227,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA PART B COMPLAINTS,control,header-record-definition#t12r1
+FS227,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS227,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS227,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS227,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS227,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS227,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t12r7
+FS227,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS227,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS227,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t14r3
+FS227,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t14r4
+FS227,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t14r5
+FS227,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals,IDEABDISPRESWSC,other,data-record-definition#t14r6
+FS227,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r7
+FS227,v23.0,data,all,8,WSC Status,,84,15,String,A,"The status of written, signed complaints.",CMPLNTSRPTISSD;CMPLNTSPNDG;CMPLNTSWDRNDIS,category,data-record-definition#t14r8
+FS227,v23.0,data,all,9,WSC Findings,,99,15,String,A,An indication of report findings.,RPTSWFNDGSNC,category,data-record-definition#t14r9
+FS227,v23.0,data,all,10,WSC Timelines,,114,15,String,A,An indication of whether the reports were filed within timelines.,RPTSWTHNTMLNS;RPTSWTHNXTMLNS,category,data-record-definition#t14r10
+FS227,v23.0,data,all,11,WSC Pending Type,,129,15,String,A,"An indication that written, signed complaints are pending a due process hearing.",CMPLNTSPNDGDPH,category,data-record-definition#t14r11
+FS227,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t14r12
+FS227,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS227,v23.0,data,all,14,WSC Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS227,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15
+FS228,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA PART B MED REQ,control,header-record-definition#t11r1
+FS228,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t11r2
+FS228,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t11r3
+FS228,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t11r4
+FS228,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t11r5
+FS228,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t11r6
+FS228,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t11r7
+FS228,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t13r1
+FS228,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t13r2
+FS228,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t13r3
+FS228,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t13r4
+FS228,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t13r5
+FS228,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals,IDEABDISPRESMEDREQ,other,data-record-definition#t13r6
+FS228,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t13r7
+FS228,v23.0,data,all,8,Mediation Request Status,,84,15,String,A,The status of the mediation requests.,MEDTNHLD;MEDTNPND;MEDTNWTHDRW,category,data-record-definition#t13r8
+FS228,v23.0,data,all,9,Mediation Type,,99,15,String,A,An indication of whether the mediation held was related to due process complaints.,MEDTNHLDDPH;MEDTNHLDNODPH,category,data-record-definition#t13r9
+FS228,v23.0,data,all,10,Mediation Outcome,,114,15,String,A,An indication that mediation ended with a mediation agreement.,MEDTNAGRMNT,category,data-record-definition#t13r10
+FS228,v23.0,data,all,11,Total Indicator,,129,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t13r11
+FS228,v23.0,data,all,12,Explanation,,130,200,String,O,Text field for state use.,,explanation,data-record-definition#t13r12
+FS228,v23.0,data,all,13,Mediation Requests Count,,330,10,Integer,M,,,count,data-record-definition#t13r13
+FS228,v23.0,data,all,14,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,340,1,,M,,,control,data-record-definition#t13r14
+FS229,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA PART B DUE PROCESS COMPLAINTS,control,header-record-definition#t12r1
+FS229,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS229,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS229,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS229,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS229,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS229,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t12r7
+FS229,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS229,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS229,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t14r3
+FS229,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t14r4
+FS229,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t14r5
+FS229,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals,IDEABDISPRESDPC,other,data-record-definition#t14r6
+FS229,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r7
+FS229,v23.0,data,all,8,Due Process Complaint Status,,84,15,String,A,The status of the due process complaints.,HRNGADJCTD;DPCPND;DPCWTHDRW,category,data-record-definition#t14r8
+FS229,v23.0,data,all,9,Hearings Fully Adjudicated Outcome,,99,15,String,A,An indication of when the due process complaint hearings ended with a decision.,DCSNSWTHNTMLN;DCSNWNEXTTMLN,category,data-record-definition#t14r9
+FS229,v23.0,data,all,10,Due Process Complaint Result,,114,15,String,A,An indication of the result of the due process complaints.,RSLTNMTG,category,data-record-definition#t14r10
+FS229,v23.0,data,all,11,Resolution Meeting Outcome,,129,15,String,A,An indication that due process complaint resolution meetings end with a written settlement agreement.,WRTNSTLAGRMNT,category,data-record-definition#t14r11
+FS229,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t14r12
+FS229,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS229,v23.0,data,all,14,Due Process Complaints Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS229,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15
+FS230,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA PART B EXPEDITED DUE PROCESS COMPLAINTS,control,header-record-definition#t12r1
+FS230,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS230,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS230,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the SEA (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS230,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS230,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS230,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t12r7
+FS230,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS230,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS230,v23.0,data,all,3,DG570 State Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,01,identifier,data-record-definition#t14r3
+FS230,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t14r4
+FS230,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t14r5
+FS230,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals,IDEABDISPRESXDPC,other,data-record-definition#t14r6
+FS230,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r7
+FS230,v23.0,data,all,8,Expedited Due Process Complaint Status,,84,15,String,A,Status of the expedited due process complaint.,EXPHRNGADJCTD;EXPDPCPND;EXPDPCWTHDRW,category,data-record-definition#t14r8
+FS230,v23.0,data,all,9,Expedited Hearings Fully Adjudicated Outcome,,99,15,String,A,Indication that expedited due process complaint hearings end with a change of placement ordered.,CHNGPLCMTORDRD,category,data-record-definition#t14r9
+FS230,v23.0,data,all,10,Expedited Due Process Complaint Result,,114,15,String,A,Resolution meeting result of the expedited due process complaint.,EXPRSLTNMTG,category,data-record-definition#t14r10
+FS230,v23.0,data,all,11,Expedited Resolution Meeting Outcome,,129,15,String,A,Indication that expedited due process complaint resolution meetings end with a written settlement agreement.,EXPWRTNSTMTAGMT,category,data-record-definition#t14r11
+FS230,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t14r12
+FS230,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS230,v23.0,data,all,14,Expedited Due Process Complaints Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS230,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15
+FS901,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA INFANT TODD (IDEA C) EXIT,control,header-record-definition#t10r1
+FS901,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t10r2
+FS901,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t10r3
+FS901,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t10r4
+FS901,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The year for which data are being reported. The required format is “CCYY–CCYY” or “CCYY CCYY”, where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t10r5
+FS901,v23.0,header,all,6,Filler,,127,393,String,M,Leave filler field blank.,,filler,header-record-definition#t10r6
+FS901,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,520,1,,M,,,control,header-record-definition#t10r7
+FS901,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t12r1
+FS901,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t12r2
+FS901,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify lead agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t12r3
+FS901,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t12r4
+FS901,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t12r5
+FS901,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEACEXIT,other,data-record-definition#t12r6
+FS901,v23.0,data,all,7,Reason for No Longer Receiving Services,,69,15,String,A,The reason infants and toddlers who were under age three and had an active individualized family service plan (IFSP) in place at some point during the reporting period and at the end of the reporting period either were no longer receiving early intervention services under IDEA Part C or had reached their third birthday.,NOLGRELGPTC;PTBELIGEXTPTC;PTBELIGCONTPTC;NTELIGPTBEXTRF;NTELIGPTBEXTNRF;PTBELIGNTDETOTH;D;MVDOUTOFSTE;WTHDRWLBYPRNT;ATMTCNTCTUNSCFL;MISSING,category,data-record-definition#t12r7
+FS901,v23.0,data,all,8,Racial/Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t12r8
+FS901,v23.0,data,all,9,Sex,,99,15,String,A,An indication that infants and toddlers are either female or male.,F;M;MISSING,category,data-record-definition#t12r9
+FS901,v23.0,data,all,10,Total Indicator,,114,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t12r10
+FS901,v23.0,data,all,11,Explanation,,115,200,String,O,Text field for state use.,,explanation,data-record-definition#t12r11
+FS901,v23.0,data,all,12,Infants and Toddlers Count,,315,10,Integer,M,,,count,data-record-definition#t12r12
+FS901,v23.0,data,all,13,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,325,1,,M,,,control,data-record-definition#t12r13
+FS902,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA INFANT TODD IDEA C EI,control,header-record-definition#t11r1
+FS902,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t11r2
+FS902,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t11r3
+FS902,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t11r4
+FS902,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t11r5
+FS902,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t11r6
+FS902,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t11r7
+FS902,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t13r1
+FS902,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t13r2
+FS902,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify lead agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t13r3
+FS902,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t13r4
+FS902,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t13r5
+FS902,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,INFNTSTDLRSEI,other,data-record-definition#t13r6
+FS902,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t13r7
+FS902,v23.0,data,all,8,Age (EI),,84,15,String,A,The discrete age of children on the child count date.,AGEB;AGE1;AGE2;MISSING,category,data-record-definition#t13r8
+FS902,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t13r9
+FS902,v23.0,data,all,10,Setting (Part C),,114,15,String,A,The primary setting in which the children receives the largest number of hours of services.,H;CMNTYBSDSTNG;OTHRSTNG;MISSING,category,data-record-definition#t13r10
+FS902,v23.0,data,all,11,Racial Ethnic,,129,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t13r11
+FS902,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t13r12
+FS902,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t13r13
+FS902,v23.0,data,all,14,Infants and Toddlers Count,,345,10,Integer,M,,,count,data-record-definition#t13r14
+FS902,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t13r15
+FS903,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA CHILD IDEA C CONT EI,control,header-record-definition#t11r1
+FS903,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t11r2
+FS903,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t11r3
+FS903,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t11r4
+FS903,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t11r5
+FS903,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t11r6
+FS903,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t11r7
+FS903,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t13r1
+FS903,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t13r2
+FS903,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify lead agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t13r3
+FS903,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t13r4
+FS903,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t13r5
+FS903,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,CHLDRNCONTEI,other,data-record-definition#t13r6
+FS903,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t13r7
+FS903,v23.0,data,all,8,Age (EI Con),,84,15,String,A,The discrete age of children on the child count date.,AGE3;AGE4;AGE5;MISSING,category,data-record-definition#t13r8
+FS903,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t13r9
+FS903,v23.0,data,all,10,Setting (Part C),,114,15,String,A,The primary setting in which the children receives the largest number of hours of services.,H;CMNTYBSDSTNG;OTHRSTNG;MISSING,category,data-record-definition#t13r10
+FS903,v23.0,data,all,11,Racial Ethnic,,129,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t13r11
+FS903,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t13r12
+FS903,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t13r13
+FS903,v23.0,data,all,14,Infants Child Count,,345,10,Integer,M,,,count,data-record-definition#t13r14
+FS903,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t13r15
+FS904,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA AT RISK INFANT TODD IDEA C,control,header-record-definition#t9r1
+FS904,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t9r2
+FS904,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t9r3
+FS904,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t9r4
+FS904,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t9r5
+FS904,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t9r6
+FS904,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t9r7
+FS904,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t11r1
+FS904,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t11r2
+FS904,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify lead agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t11r3
+FS904,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t11r4
+FS904,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t11r5
+FS904,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,ATRSKIT,other,data-record-definition#t11r6
+FS904,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t11r7
+FS904,v23.0,data,all,8,Age (EI),,84,15,String,A,The discrete age of children on the child count date.,AGEB;AGE1;AGE2;MISSING,category,data-record-definition#t11r8
+FS904,v23.0,data,all,9,Racial Ethnic,,99,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t11r9
+FS904,v23.0,data,all,10,Total Indicator,,114,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t11r10
+FS904,v23.0,data,all,11,Explanation,,115,200,String,O,Text field for state use.,,explanation,data-record-definition#t11r11
+FS904,v23.0,data,all,12,Infants and Toddlers Count,,315,10,Integer,M,,,count,data-record-definition#t11r12
+FS904,v23.0,data,all,13,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,325,1,,M,,,control,data-record-definition#t11r13
+FS905,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,SEA INFANT TODD IDEA C CMLT,control,header-record-definition#t9r1
+FS905,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t9r2
+FS905,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t9r3
+FS905,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t9r4
+FS905,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t9r5
+FS905,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t9r6
+FS905,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t9r7
+FS905,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t11r1
+FS905,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t11r2
+FS905,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify lead agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t11r3
+FS905,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t11r4
+FS905,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank.,,filler,data-record-definition#t11r5
+FS905,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,INFNTSTDLRCMLT,other,data-record-definition#t11r6
+FS905,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t11r7
+FS905,v23.0,data,all,8,Racial Ethnic,,84,15,String,A,The general racial category that most clearly reflects individuals' recognition of their community or with which the individuals most identify.,AM7;AS7;BL7;HI7;PI7;WH7;MU7;MISSING,category,data-record-definition#t11r8
+FS905,v23.0,data,all,9,Sex (Membership),,99,15,String,A,An indication that students are either female or male.,F;M;MISSING,category,data-record-definition#t11r9
+FS905,v23.0,data,all,10,Total Indicator,,114,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t11r10
+FS905,v23.0,data,all,11,Explanation,,115,200,String,O,Text field for state use.,,explanation,data-record-definition#t11r11
+FS905,v23.0,data,all,12,Infants and Toddlers Count,,315,10,Integer,M,,,count,data-record-definition#t11r12
+FS905,v23.0,data,all,13,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,325,1,,M,,,control,data-record-definition#t11r13
+FS906,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,LA PART C COMPLAINTS,control,header-record-definition#t12r1
+FS906,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS906,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS906,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS906,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS906,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS906,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t12r7
+FS906,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS906,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS906,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t14r3
+FS906,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t14r4
+FS906,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t14r5
+FS906,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEACDISPRESWSC,other,data-record-definition#t14r6
+FS906,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r7
+FS906,v23.0,data,all,8,WSC Status,,84,15,String,A,"Status of the written, signed complaint.",CMPLNTSRPTISSD;CMPLNTSPNDG;CMPLNTSWDRNDIS,category,data-record-definition#t14r8
+FS906,v23.0,data,all,9,WSC Findings,,99,15,String,A,Indication of report findings.,RPTSWFNDGSNC,category,data-record-definition#t14r9
+FS906,v23.0,data,all,10,WSC Timelines,,114,15,String,A,Indication of report timeliness.,RPTSWTHNTMLNS;RPTSWTHNXTMLNS,category,data-record-definition#t14r10
+FS906,v23.0,data,all,11,WSC Pending Type,,129,15,String,A,"Indication that written, signed complaints are pending a due process hearing.",CMPLNTSPNDGDPH,category,data-record-definition#t14r11
+FS906,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t14r12
+FS906,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS906,v23.0,data,all,14,WSC Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS906,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15
+FS907,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,LA PART C MED REQ,control,header-record-definition#t11r1
+FS907,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t11r2
+FS907,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t11r3
+FS907,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t11r4
+FS907,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t11r5
+FS907,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t11r6
+FS907,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t11r7
+FS907,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t13r1
+FS907,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t13r2
+FS907,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t13r3
+FS907,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t13r4
+FS907,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t13r5
+FS907,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEACDISPRESMEDREQ,other,data-record-definition#t13r6
+FS907,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t13r7
+FS907,v23.0,data,all,8,Mediation Request Status,,84,15,String,A,The status of the mediation requests.,MEDTNHLD;MEDTNPND;MEDTNWTHDRW,category,data-record-definition#t13r8
+FS907,v23.0,data,all,9,Mediation Type,,99,15,String,A,An indication of whether the mediation held was related to due process complaints.,MEDTNHLDDPH;MEDTNHLDNODPH,category,data-record-definition#t13r9
+FS907,v23.0,data,all,10,Mediation Outcome,,114,15,String,A,An indication that mediation ended with a mediation agreement.,MEDTNAGRMNT,category,data-record-definition#t13r10
+FS907,v23.0,data,all,11,Total Indicator,,129,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t13r11
+FS907,v23.0,data,all,12,Explanation,,130,200,String,O,Text field for state use.,,explanation,data-record-definition#t13r12
+FS907,v23.0,data,all,13,Mediation Requests Count,,330,10,Integer,M,,,count,data-record-definition#t13r13
+FS907,v23.0,data,all,14,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,340,1,,M,,,control,data-record-definition#t13r14
+FS908,v23.0,header,all,1,File Type,,1,50,String,M,Identifies the type of file being submitted.,LA PART C DUE PROCESS COMPLAINTS,control,header-record-definition#t12r1
+FS908,v23.0,header,all,2,Total Records in File,,51,10,Integer,M,The total number of data records contained in the file. The header record is NOT included in this count.,,control,header-record-definition#t12r2
+FS908,v23.0,header,all,3,File Name,,61,25,String,M,"The file name including extension, the same as the external file name.",See section 3.0,control,header-record-definition#t12r3
+FS908,v23.0,header,all,4,File Identifier,,86,32,String,M,"Any combination of standard characters to further identify the file as specified by the lead agency (e.g., a date, person’s name, and version number).",,control,header-record-definition#t12r4
+FS908,v23.0,header,all,5,File Reporting Period,,118,9,String,M,"The school year for which data are being reported. The required format is ""CCYY–CCYY"" or ""CCYY CCYY"", where either a hyphen or a space separates the beginning and ending years.",2026-2027;OR;2026 2027,control,header-record-definition#t12r5
+FS908,v23.0,header,all,6,Filler,,127,378,String,M,Leave filler field blank.,,filler,header-record-definition#t12r6
+FS908,v23.0,header,all,7,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,505,1,,M,,,control,header-record-definition#t12r7
+FS908,v23.0,data,all,1,File Record Number,,1,10,Integer,M,A sequential number assigned by the State that is unique to each row entry within the file.,,control,data-record-definition#t14r1
+FS908,v23.0,data,all,2,DG559 State Code,DG559,11,2,String,M,"The two-digit American National Standards Institute (ANSI) code for the state, District of Columbia, and the outlying areas and freely associated areas of the United States.","For a list of valid State Codes, refer to the EDFacts Workbook.",identifier,data-record-definition#t14r2
+FS908,v23.0,data,all,3,DG570 Lead Agency Number,DG570,13,2,String,M,A number used to uniquely identify state agencies. This ID cannot be updated through this file.,02,identifier,data-record-definition#t14r3
+FS908,v23.0,data,all,4,Filler,,15,14,String,M,Leave filler field blank.,,filler,data-record-definition#t14r4
+FS908,v23.0,data,all,5,Filler,,29,20,String,M,Leave filler field blank,,filler,data-record-definition#t14r5
+FS908,v23.0,data,all,6,Table Name,,49,20,String,M,See technical name in Section 2.3 Required Categories and Totals.,IDEACDISPRESDPC,other,data-record-definition#t14r6
+FS908,v23.0,data,all,7,Filler,,69,15,String,M,Leave filler field blank.,,filler,data-record-definition#t14r7
+FS908,v23.0,data,all,8,Due Process Complaint Status,,84,15,String,A,The status of the due process complaints.,HRNGADJCTD;DPCPND;DPCWTHDRW,category,data-record-definition#t14r8
+FS908,v23.0,data,all,9,Hearings Fully Adjudicated Outcome,,99,15,String,A,An indication of when the due process complaint hearings ended with a decision.,DCSNSWTHNTMLN;DCSNWNEXTTMLN,category,data-record-definition#t14r9
+FS908,v23.0,data,all,10,Due Process Complaint Result,,114,15,String,A,An indication that due process complaint resolution meetings end with a written settlement agreement.,RSLTNMTG,category,data-record-definition#t14r10
+FS908,v23.0,data,all,11,Resolution Meeting Outcome,,129,15,String,A,An indication of the result of the due process complaints.,WRTNSTLAGRMNT,category,data-record-definition#t14r11
+FS908,v23.0,data,all,12,Total Indicator,,144,1,String,M,An indicator that defines the count level – see table 2.3-1 “Required Categories and Totals”,N;Y,total,data-record-definition#t14r12
+FS908,v23.0,data,all,13,Explanation,,145,200,String,O,Text field for state use.,,explanation,data-record-definition#t14r13
+FS908,v23.0,data,all,14,Due Process Complaints Count,,345,10,Integer,M,,,count,data-record-definition#t14r14
+FS908,v23.0,data,all,15,Carriage Return / Line Feed (CRLF) or Line Feed (LF),,355,1,,M,,,control,data-record-definition#t14r15

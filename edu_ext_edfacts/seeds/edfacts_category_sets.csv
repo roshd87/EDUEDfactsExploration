@@ -1,0 +1,34 @@
+file_spec_id,file_spec_version,org_level,category_set,set_order,total_indicator,category,column_name
+FS052,v23.0,SEA,Category Set A,1,N,Grade Level (Membership),grade_level_membership
+FS052,v23.0,SEA,Category Set A,1,N,Sex (Membership),sex_membership
+FS052,v23.0,SEA,Category Set A,1,N,Racial Ethnic,racial_ethnic
+FS052,v23.0,SEA,Subtotal 1,2,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,SEA,Subtotal 1,2,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,SEA,Subtotal 2,3,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,SEA,Subtotal 2,3,Y,Sex (Membership),sex_membership
+FS052,v23.0,SEA,Subtotal 3,4,Y,Sex (Membership),sex_membership
+FS052,v23.0,SEA,Subtotal 3,4,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,SEA,Subtotal 4,5,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,SEA,Education Unit Total,6,Y,,
+FS052,v23.0,LEA,Category Set A,1,N,Grade Level (Membership),grade_level_membership
+FS052,v23.0,LEA,Category Set A,1,N,Sex (Membership),sex_membership
+FS052,v23.0,LEA,Category Set A,1,N,Racial Ethnic,racial_ethnic
+FS052,v23.0,LEA,Subtotal 1,2,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,LEA,Subtotal 1,2,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,LEA,Subtotal 2,3,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,LEA,Subtotal 2,3,Y,Sex (Membership),sex_membership
+FS052,v23.0,LEA,Subtotal 3,4,Y,Sex (Membership),sex_membership
+FS052,v23.0,LEA,Subtotal 3,4,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,LEA,Subtotal 4,5,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,LEA,Education Unit Total,6,Y,,
+FS052,v23.0,School,Category Set A,1,N,Grade Level (Membership),grade_level_membership
+FS052,v23.0,School,Category Set A,1,N,Sex (Membership),sex_membership
+FS052,v23.0,School,Category Set A,1,N,Racial Ethnic,racial_ethnic
+FS052,v23.0,School,Subtotal 1,2,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,School,Subtotal 1,2,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,School,Subtotal 2,3,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,School,Subtotal 2,3,Y,Sex (Membership),sex_membership
+FS052,v23.0,School,Subtotal 3,4,Y,Sex (Membership),sex_membership
+FS052,v23.0,School,Subtotal 3,4,Y,Racial Ethnic,racial_ethnic
+FS052,v23.0,School,Subtotal 4,5,Y,Grade Level (Membership),grade_level_membership
+FS052,v23.0,School,Education Unit Total,6,Y,,

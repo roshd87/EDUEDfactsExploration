@@ -1,0 +1,9 @@
+k_student,lea_identifier_state,school_identifier_state,grade_level_membership,sex_membership,racial_ethnic
+s01,99981,0123,07,M,AM7
+s02,99981,0123,07,F,AM7
+s03,99981,0123,KG,F,WH7
+s04,99981,0124,12,M,HI7
+s05,99981,0124,12,F,MISSING
+s06,99982,0201,PK,M,MU7
+s07,99982,0201,01,F,BL7
+s08,99982,0201,UG,M,AS7

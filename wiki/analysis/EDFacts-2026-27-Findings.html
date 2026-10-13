@@ -1,0 +1,242 @@
+<title>EDFacts SY 2026-27 Findings</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 72ch reading column; wide tables and the byte ruler scroll inside their own boxes. */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6577;
+  --rule: #d6dbe3;
+  --accent: #1f4e8c;       /* ink-blue, the stamp on a federal form */
+  --accent-soft: #e4ecf7;
+  --warn: #9a5b00;         /* "differs" */
+  --warn-soft: #fbf0dc;
+  --ok: #2a6b3f;           /* "identical" */
+  --ok-soft: #e3f1e7;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
+    --accent: #8db4ec; --accent-soft: #1d2f4a; --warn: #e8b35a; --warn-soft: #3a2c12;
+    --ok: #7fc795; --ok-soft: #173321; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
+  --accent: #8db4ec; --accent-soft: #1d2f4a; --warn: #e8b35a; --warn-soft: #3a2c12;
+  --ok: #7fc795; --ok-soft: #173321; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg); font: 16px/1.55 var(--font-body);
+  padding-block: 2.5rem 4rem; padding-inline: 16px;
+}
+main { max-width: 76ch; margin-inline: auto; display: grid; gap: 2.25rem; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 600; }
+h2 { font-size: 1.25rem; font-weight: 600; color: var(--accent); padding-top: .25rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+h3 { font-size: 1rem; font-weight: 600; margin-top: .5rem; }
+p { margin: 0; max-width: 68ch; }
+section { display: grid; gap: .85rem; }
+.eyebrow { font: 500 .75rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: .6rem; }
+header .meta { color: var(--muted); font-size: .9rem; }
+.lead { font-size: 1.08rem; }
+code, .mono { font-family: var(--font-mono); font-size: .9em; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Facts strip: plain label/value pairs, no tiles */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem 1.25rem; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
+.facts div { display: grid; gap: .15rem; }
+.facts dt { font-size: .78rem; color: var(--muted); }
+.facts dd { margin: 0; font-size: 1.35rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.facts dd small { font-size: .8rem; font-weight: 400; color: var(--muted); margin-left: .25rem; }
+
+/* Tables */
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--bg); }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td .mono { white-space: nowrap; }
+
+/* Status chips */
+.chip { display: inline-block; font: 500 .72rem/1.6 var(--font-mono); padding: 0 .45rem; border-radius: 3px; white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.info { background: var(--accent-soft); color: var(--accent); }
+
+/* Byte ruler for the fixed record prefix */
+.ruler { overflow-x: auto; padding: .25rem 0 .5rem; }
+.ruler .track { display: grid; grid-template-columns: 10fr 2fr 2fr 14fr 20fr 20fr; min-width: 560px; gap: 2px; font-family: var(--font-mono); font-size: .72rem; }
+.ruler .seg { background: var(--accent-soft); color: var(--fg); border-top: 3px solid var(--accent); padding: .35rem .4rem; min-width: 0; }
+.ruler .seg b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ruler .seg span { color: var(--muted); }
+.ruler .scale { display: grid; grid-template-columns: 10fr 2fr 2fr 14fr 20fr 20fr; min-width: 560px; gap: 2px; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); margin-top: .25rem; }
+.ruler .scale span { padding-inline: .4rem; }
+
+ul, ol { margin: 0; padding-left: 1.25rem; display: grid; gap: .45rem; }
+li { max-width: 68ch; }
+li b { font-weight: 600; }
+.note { border-left: 3px solid var(--accent); padding: .6rem .9rem; background: var(--surface); color: var(--fg); font-size: .95rem; }
+footer { color: var(--muted); font-size: .85rem; border-top: 1px solid var(--rule); padding-top: 1rem; display: grid; gap: .35rem; }
+footer code { font-size: .85em; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 480px) { body { font-size: 15px; } .facts dd { font-size: 1.2rem; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+<main>
+
+<header>
+  <div class="eyebrow">EDUEDfacts · wiki/analysis · frozen 2026-10-07</div>
+  <h1>EDFacts SY 2026-27 Findings</h1>
+  <p class="lead">What the SY 2026-27 file specifications contain, what changed from SY 2025-26, and which fields are shared across files. Written for the dbt package that will generate EDFacts files from Ed-Fi and EDU/Stadium data.</p>
+  <p class="meta">Sources: 94 DOCX specifications and 43 companion documents fetched from ed.gov on 2026-10-07; full Pandoc extraction of both years; a five-batch field review validated against every layout table. File references are at the end.</p>
+</header>
+
+<section>
+  <h2>1. The catalog</h2>
+  <dl class="facts">
+    <div><dt>Specifications</dt><dd>94<small>DOCX</small></dd></div>
+    <div><dt>Distinct FS ids</dt><dd>93</dd></div>
+    <div><dt>Version</dt><dd>23.0<small>FS029 also 23.1</small></dd></div>
+    <div><dt>Active at freeze</dt><dd>0<small>of 94</small></dd></div>
+    <div><dt>Dropped from SY 2025-26</dt><dd>1<small>FS112</small></dd></div>
+    <div><dt>Added</dt><dd>0</dd></div>
+  </dl>
+  <p>Every file was Inactive on the freeze date; the page reads "There are no active files at this time." Files move to Active as EDPass unlocks them. The only catalog change is the removal of FS112 (Special Education Paraprofessionals, DG647). FS045 moved from its odd v2.0 to v23.0, and FS224/FS225 lost their Optional flag.</p>
+  <p>Companion documents linked from the same pages were cached too: the EDPass metadata user guides (28), the EDFacts Workbooks and the Business Rules Single Inventory through SY 2025-26 v1.04. No SY 2026-27 BRSI exists yet.</p>
+</section>
+
+<section>
+  <h2>2. What changed from SY 2025-26</h2>
+  <p>Three sources agree: the document-history table in each DOCX, a normalized cell-by-cell diff of both years' extractions, and the catalog itself. 83 of 94 documents record editorial edits only. Eleven record a substantive change.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Specs</th><th>Change</th><th>Effect on a producer</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">FS175 FS178 FS179<br>FS185 FS188 FS189</td><td>Zero-count guidance revised; "metadata survey" becomes "metadata collection" with explicit file ids FS5005–FS5008; permitted-value comments now say "if used by the state"; accommodation definitions added (achievement files)</td><td>Report "all applicable combinations for the state"; the state's assessment-type and grade answers are themselves EDFacts metadata files</td></tr>
+      <tr><td class="mono">FS113 FS125</td><td>Zero-exceptions cell changes to "None"</td><td>Every N or D program type is expected, even when the state has none</td></tr>
+      <tr><td class="mono">FS127</td><td>Count type: "once for each type of delinquent or at-risk program"</td><td>Program-type unduplication rule is now explicit</td></tr>
+      <tr><td class="mono">FS118</td><td>New Q&amp;A: compile a cumulative, unduplicated count of homeless students enrolled at any time in the year</td><td>Point-in-time snapshots are not enough; Generate's "homelessness starts during the enrollment" filter is now explicitly wrong</td></tr>
+      <tr><td class="mono">FS195</td><td>New Q&amp;A: a student is counted once at each shared-time school where they meet the chronic-absence definition</td><td>Per-school counting for shared-time students</td></tr>
+      <tr><td class="mono">FS029 v23.1</td><td>Typo fix in the LA data record example</td><td>None</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">No Data Record Definition or Header Record Definition changed beyond punctuation in any of the 94 files. Layout seeds can be built from either year's extraction.</p>
+  <p>The broadest change is in vocabulary. The specs now cite EDPass metadata collections FS5002 to FS5029 fifty-seven times, against nine residual "survey" mentions. The state policy answers that Generate kept as toggle questions (count dates, age bands, assessment types offered) are themselves EDFacts files in this cycle.</p>
+</section>
+
+<section>
+  <h2>3. Fields shared across files</h2>
+  <p>Every header and data-record field in the 94 files was extracted (2,245 rows: 672 header, 1,573 data) and compared by normalized name.</p>
+  <dl class="facts">
+    <div><dt>Distinct fields</dt><dd>216</dd></div>
+    <div><dt>Shared by ≥2 files</dt><dd>88</dd></div>
+    <div><dt>Universal</dt><dd>22</dd></div>
+    <div><dt>Family-wide</dt><dd>16</dd></div>
+    <div><dt>Collection-specific</dt><dd>50</dd></div>
+    <div><dt>Fully identical incl. position</dt><dd>19</dd></div>
+  </dl>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Among the 88 shared fields</th><th class="num">Identical</th><th class="num">Equivalent</th><th class="num">Differs</th><th class="num">None</th></tr></thead>
+    <tbody>
+      <tr><td>Definition text</td><td class="num">45</td><td class="num">34</td><td class="num">9</td><td class="num">—</td></tr>
+      <tr><td>Permitted values</td><td class="num">48</td><td class="num">9</td><td class="num">9</td><td class="num">22</td></tr>
+      <tr><td>Length</td><td class="num">84</td><td class="num">—</td><td class="num">4</td><td class="num">—</td></tr>
+      <tr><td>Start position</td><td class="num">37</td><td class="num">—</td><td class="num">49</td><td class="num">2</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><b>Content is reusable; position is not.</b> 67 of the 88 shared fields agree on definition, permitted values and length, but only 37 keep a fixed start position. A shared seed can define each field's name, length, type and value set once. Each file's layout seed must supply its own start positions and its own header filler length.</p>
+
+  <h3>The fixed skeleton</h3>
+  <p>The header record has the same structure in all 94 files: File Type 1/50, Total Records 51/10, File Name 61/25, File Identifier 86/32, Reporting Period 118/9, then Filler from 127 and CRLF. Only the record length varies (270 to 880 bytes). The data record opens with a prefix that is fixed in 73 of 96 data layouts:</p>
+  <div class="ruler" aria-label="Data record prefix, positions 1 to 68, drawn to scale by length">
+    <div class="track">
+      <div class="seg"><b>File Record Number</b><span>1–10</span></div>
+      <div class="seg"><b>State</b><span>11–12</span></div>
+      <div class="seg"><b>Agency</b><span>13–14</span></div>
+      <div class="seg"><b>LEA Identifier (State)</b><span>15–28</span></div>
+      <div class="seg"><b>School Identifier (State)</b><span>29–48</span></div>
+      <div class="seg"><b>Table Name</b><span>49–68</span></div>
+    </div>
+    <div class="scale"><span>1</span><span>11</span><span>13</span><span>15</span><span>29</span><span>49 … 68</span></div>
+  </div>
+  <p>Categories follow in 15-byte slots (312 of 320 category fields are 15 wide), usually from position 69, then Total Indicator (1), Explanation (200), the count (10) and CRLF.</p>
+
+  <h3>Universal fields</h3>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Field</th><th class="num">Specs</th><th class="num">Start</th><th class="num">Len</th><th>Position fixed</th><th>Definition</th><th>Values</th></tr></thead>
+    <tbody>
+      <tr><td>File Record Number</td><td class="num">93</td><td class="num">1</td><td class="num">10</td><td><span class="chip ok">yes</span></td><td>equivalent</td><td>—</td></tr>
+      <tr><td>State Code</td><td class="num">93</td><td class="num">11</td><td class="num">2</td><td><span class="chip ok">yes</span></td><td>equivalent</td><td>Workbook list</td></tr>
+      <tr><td>State Agency Number</td><td class="num">85</td><td class="num">13</td><td class="num">2</td><td><span class="chip ok">yes</span></td><td>equivalent</td><td><code>01</code></td></tr>
+      <tr><td>LEA Identifier (State)</td><td class="num">68</td><td class="num">15</td><td class="num">14</td><td><span class="chip ok">yes</span></td><td>equivalent</td><td>blank at SEA</td></tr>
+      <tr><td>School Identifier (State)</td><td class="num">41</td><td class="num">29</td><td class="num">20</td><td><span class="chip warn">no</span> 36 in 3 files</td><td>equivalent</td><td>blank at SEA/LEA</td></tr>
+      <tr><td>Table Name</td><td class="num">77</td><td class="num">49</td><td class="num">20</td><td><span class="chip warn">no</span> 44 FS099, 29 FS193</td><td>equivalent</td><td>per-file literals</td></tr>
+      <tr><td>Total Indicator</td><td class="num">76</td><td class="num">varies</td><td class="num">1</td><td><span class="chip warn">no</span></td><td>equivalent</td><td><span class="chip warn">differs</span></td></tr>
+      <tr><td>Explanation</td><td class="num">92</td><td class="num">varies</td><td class="num">200</td><td><span class="chip warn">no</span></td><td>equivalent</td><td>—</td></tr>
+      <tr><td>Student Count</td><td class="num">50</td><td class="num">varies</td><td class="num">10</td><td><span class="chip warn">no</span></td><td>identical</td><td>FS151 length 8</td></tr>
+      <tr><td>Racial Ethnic</td><td class="num">24</td><td class="num">varies</td><td class="num">15</td><td><span class="chip warn">no</span></td><td>identical</td><td><code>AM7 AS7 BL7 HI7 PI7 WH7 MU7 MISSING</code></td></tr>
+      <tr><td>Sex (Membership)</td><td class="num">24</td><td class="num">varies</td><td class="num">15</td><td><span class="chip warn">no</span></td><td>identical</td><td><code>F M MISSING</code></td></tr>
+      <tr><td>Disability Status (Only)</td><td class="num">23</td><td class="num">varies</td><td class="num">15</td><td><span class="chip warn">no</span></td><td>identical</td><td>identical</td></tr>
+      <tr><td>English Learner Status (Only)</td><td class="num">21</td><td class="num">varies</td><td class="num">15</td><td><span class="chip warn">no</span></td><td>identical</td><td>identical</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The five header fields, header Filler and CRLF complete the 22 universal fields. "Equivalent" definitions differ only editorially: dash glyphs, "State" against "SEA", a dropped period, a cross-reference.</p>
+
+  <h3>Family-wide fields</h3>
+  <ul>
+    <li><b>Student counts, assessment and EL:</b> Economically Disadvantaged Status (16 specs), Homeless Enrolled Status (11), Migratory Status (10), Major Racial and Ethnic Groups (9), Foster Care Status (8).</li>
+    <li><b>Assessment and EL:</b> English Learner Status (Both) (9), Military Connected Student Status (6), Proficiency Status (6), Assessment Administered (ELP) (4), Grade Level (4).</li>
+    <li><b>IDEA Part B and C:</b> Disability Category (IDEA) (7), Infants and Toddlers Count (4), Lead Agency Number (9).</li>
+    <li><b>Accountability FS199–FS205:</b> State Defined Status Indicator (5), Major Racial and Ethnic Groups (Accountability) (4).</li>
+  </ul>
+  <p>All family-wide fields have identical permitted values across their specs. Collection-specific fields come in mirrored pairs: Part B and Part C dispute resolution (FS227/FS906, FS228/FS907, FS229/FS908), the N or D pairs, and the FS029/FS190/FS196 address blocks.</p>
+</section>
+
+<section>
+  <h2>4. Looks shared but differs</h2>
+  <p>These are the fields that would break a single shared definition. Each needs a per-spec value in the seeds.</p>
+  <ol>
+    <li><b>Total Indicator has three value sets.</b> <code>N;Y</code> in 52 specs, <code>N</code> only in 20, <code>Y</code> only in FS193, FS205, FS222 and FS226. Seventeen specs (directory, status and roster files) have none. The accepted-values test is per spec.</li>
+    <li><b>Header length is not data length.</b> They differ in 57 of 94 spec versions, so header Filler is a per-spec seed value, not <code>data_length − 127</code>.</li>
+    <li><b>State Agency Number and Lead Agency Number share slot 13/2</b> (both DG570). The value is <code>01</code> in SEA files and <code>02</code> in the LA Directory (FS029 v23.1) and FS901–FS908. FS906–FS908 still define it as "state agencies".</li>
+    <li><b>FS908 prints two definitions swapped</b> relative to FS229 (Due Process Complaint Result and Resolution Meeting Outcome). Codes and positions agree; treat the codes as authoritative.</li>
+    <li><b>Same name, different length.</b> Military Connected Student Status is 125 in FS175/178/179 and 15 in FS185/188/189. Student Count is 8 in FS151 and 10 everywhere else. Data Filler runs 7 to 125.</li>
+    <li><b>Same identifier, shifted start.</b> School Identifier (State) starts at 36 where an NCES LEA id occupies 29–35 (FS029 School, FS039, FS197). Table Name starts at 44 in FS099 and 29 in FS193. Staff FTE starts at 330, 345 or 145 depending on the file.</li>
+    <li><b>Delinquent Programs:</b> FS119 permits <code>MISSING</code>; FS127 does not.</li>
+    <li><b>Disability Category (IDEA):</b> FS006 and FS089 add IFSP to the definition; values are identical.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>5. What this means for the plan</h2>
+  <ul>
+    <li><b>Seed shape.</b> One <code>edfacts_fields</code> seed defines the 67 content-identical shared fields (name, length, type, permitted values) once; each <code>FS###</code> layout seed carries start positions, header filler length, Total Indicator value set and any per-file length override.</li>
+    <li><b>Config shape.</b> Shape <code>edfacts_config</code> to the FS5002–FS5029 metadata collections, so the same seed emits the metadata files and drives the data files.</li>
+    <li><b>Scope.</b> Drop FS112 from every rollout list.</li>
+    <li><b>Rules changed by the new guidance.</b> FS118 cumulative unduplicated count, FS195 once-per-shared-time-school, FS113/FS125 program-type zero exceptions, FS127 count type, assessment "all applicable combinations". Apply each when building that file.</li>
+    <li><b>Re-check when files go Active.</b> The SY 2026-27 BRSI and any post-unlock spec revisions; refresh with the Chrome fetch and freeze scripts.</li>
+  </ul>
+</section>
+
+<footer>
+  <div><b>Detail notes:</b> <code>wiki/analysis/EDFacts-2026-27-Delta.md</code> · <code>wiki/analysis/EDFacts-2026-27-Shared-Fields.md</code> · <code>wiki/analysis/edfacts-2026-27-shared-fields.csv</code> (88 rows)</div>
+  <div><b>Evidence:</b> <code>wiki/reference/edfacts/2026-27/</code> (MANIFEST.csv, SHA-256 per file) · <code>tasks/reports/2026-27/</code> (table cells, text blocks, two-year delta) · <code>tasks/reports/field-review/</code> (per-batch field shards, validation and consolidation scripts)</div>
+  <div><b>Method:</b> ed.gov refuses non-browser clients; pages and files were fetched through a Chrome window driven over the DevTools protocol (<code>tasks/fetch_edgov_via_chrome.ps1</code>) and frozen by <code>tasks/freeze_edfacts_catalog.py</code>.</div>
+</footer>
+
+</main>

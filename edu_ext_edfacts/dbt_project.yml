@@ -1,0 +1,17 @@
+name: edu_ext_edfacts
+version: 0.1.0
+config-version: 2
+require-dbt-version: ">=1.8.0"
+
+# Spec seeds are rebuilt by tasks/build_edfacts_seeds.py; never hand-edit them.
+seeds:
+  edu_ext_edfacts:
+    +column_types: {file_spec_id: varchar, file_spec_version: varchar}
+    edfacts_files:
+      +column_types: {file_spec_id: varchar, file_spec_version: varchar, reporting_period: varchar}
+    edfacts_layouts:
+      +column_types: {file_spec_id: varchar, file_spec_version: varchar, data_group: varchar}
+    edfacts_category_sets:
+      +column_types: {file_spec_id: varchar, file_spec_version: varchar, total_indicator: varchar, column_name: varchar}
+    edfacts_permitted_values:
+      +column_types: {file_spec_id: varchar, file_spec_version: varchar, code: varchar, label: varchar}

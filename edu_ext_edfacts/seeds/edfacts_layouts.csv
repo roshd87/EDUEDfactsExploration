@@ -1,0 +1,61 @@
+file_spec_id,file_spec_version,org_level,record_type,seq,element,data_group,column_name,start_position,length,data_type,pop
+FS052,v23.0,SEA,header,1,File Type,,file_type,1,50,String,M
+FS052,v23.0,SEA,header,2,Total Records in File,,total_records_in_file,51,10,Integer,M
+FS052,v23.0,SEA,header,3,File Name,,file_name,61,25,String,M
+FS052,v23.0,SEA,header,4,File Identifier,,file_identifier,86,32,String,M
+FS052,v23.0,SEA,header,5,File Reporting Period,,file_reporting_period,118,9,String,M
+FS052,v23.0,SEA,header,6,Filler,,filler,127,333,String,M
+FS052,v23.0,SEA,header,7,CRLF,,crlf,460,1,,M
+FS052,v23.0,SEA,data,1,File Record Number,,file_record_number,1,10,Integer,M
+FS052,v23.0,SEA,data,2,State Code,DG559,state_code,11,2,String,M
+FS052,v23.0,SEA,data,3,State Agency Number,DG570,state_agency_number,13,2,String,M
+FS052,v23.0,SEA,data,4,LEA Identifier (State),DG4,lea_identifier_state,15,14,String,M
+FS052,v23.0,SEA,data,5,School Identifier (State),DG5,school_identifier_state,29,20,String,M
+FS052,v23.0,SEA,data,6,Table Name,,table_name,49,20,String,M
+FS052,v23.0,SEA,data,7,Grade Level (membership),,grade_level_membership,69,15,String,A
+FS052,v23.0,SEA,data,8,Racial Ethnic,,racial_ethnic,84,15,String,A
+FS052,v23.0,SEA,data,9,Sex (Membership),,sex_membership,99,15,String,A
+FS052,v23.0,SEA,data,10,Total Indicator,,total_indicator,114,1,String,M
+FS052,v23.0,SEA,data,11,Explanation,,explanation,115,200,String,O
+FS052,v23.0,SEA,data,12,Student Count,,student_count,315,10,Integer,M
+FS052,v23.0,SEA,data,13,CRLF,,crlf,325,1,,M
+FS052,v23.0,LEA,header,1,File Type,,file_type,1,50,String,M
+FS052,v23.0,LEA,header,2,Total Records in File,,total_records_in_file,51,10,Integer,M
+FS052,v23.0,LEA,header,3,File Name,,file_name,61,25,String,M
+FS052,v23.0,LEA,header,4,File Identifier,,file_identifier,86,32,String,M
+FS052,v23.0,LEA,header,5,File Reporting Period,,file_reporting_period,118,9,String,M
+FS052,v23.0,LEA,header,6,Filler,,filler,127,333,String,M
+FS052,v23.0,LEA,header,7,CRLF,,crlf,460,1,,M
+FS052,v23.0,LEA,data,1,File Record Number,,file_record_number,1,10,Integer,M
+FS052,v23.0,LEA,data,2,State Code,DG559,state_code,11,2,String,M
+FS052,v23.0,LEA,data,3,State Agency Number,DG570,state_agency_number,13,2,String,M
+FS052,v23.0,LEA,data,4,LEA Identifier (State),DG4,lea_identifier_state,15,14,String,M
+FS052,v23.0,LEA,data,5,School Identifier (State),DG5,school_identifier_state,29,20,String,M
+FS052,v23.0,LEA,data,6,Table Name,,table_name,49,20,String,M
+FS052,v23.0,LEA,data,7,Grade Level (membership),,grade_level_membership,69,15,String,A
+FS052,v23.0,LEA,data,8,Racial Ethnic,,racial_ethnic,84,15,String,A
+FS052,v23.0,LEA,data,9,Sex (Membership),,sex_membership,99,15,String,A
+FS052,v23.0,LEA,data,10,Total Indicator,,total_indicator,114,1,String,M
+FS052,v23.0,LEA,data,11,Explanation,,explanation,115,200,String,O
+FS052,v23.0,LEA,data,12,Student Count,,student_count,315,10,Integer,M
+FS052,v23.0,LEA,data,13,CRLF,,crlf,325,1,,M
+FS052,v23.0,School,header,1,File Type,,file_type,1,50,String,M
+FS052,v23.0,School,header,2,Total Records in File,,total_records_in_file,51,10,Integer,M
+FS052,v23.0,School,header,3,File Name,,file_name,61,25,String,M
+FS052,v23.0,School,header,4,File Identifier,,file_identifier,86,32,String,M
+FS052,v23.0,School,header,5,File Reporting Period,,file_reporting_period,118,9,String,M
+FS052,v23.0,School,header,6,Filler,,filler,127,333,String,M
+FS052,v23.0,School,header,7,CRLF,,crlf,460,1,,M
+FS052,v23.0,School,data,1,File Record Number,,file_record_number,1,10,Integer,M
+FS052,v23.0,School,data,2,State Code,DG559,state_code,11,2,String,M
+FS052,v23.0,School,data,3,State Agency Number,DG570,state_agency_number,13,2,String,M
+FS052,v23.0,School,data,4,LEA Identifier (State),DG4,lea_identifier_state,15,14,String,M
+FS052,v23.0,School,data,5,School Identifier (State),DG5,school_identifier_state,29,20,String,M
+FS052,v23.0,School,data,6,Table Name,,table_name,49,20,String,M
+FS052,v23.0,School,data,7,Grade Level (membership),,grade_level_membership,69,15,String,A
+FS052,v23.0,School,data,8,Racial Ethnic,,racial_ethnic,84,15,String,A
+FS052,v23.0,School,data,9,Sex (Membership),,sex_membership,99,15,String,A
+FS052,v23.0,School,data,10,Total Indicator,,total_indicator,114,1,String,M
+FS052,v23.0,School,data,11,Explanation,,explanation,115,200,String,O
+FS052,v23.0,School,data,12,Student Count,,student_count,315,10,Integer,M
+FS052,v23.0,School,data,13,CRLF,,crlf,325,1,,M

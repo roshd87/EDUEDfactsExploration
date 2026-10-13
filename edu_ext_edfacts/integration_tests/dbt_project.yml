@@ -1,0 +1,16 @@
+name: edu_ext_edfacts_integration_tests
+version: 0.1.0
+config-version: 2
+profile: edu_ext_edfacts_integration_tests
+
+vars:
+  edfacts_state_code: "80"
+  edfacts_state_abbr: EU
+  edfacts_submission_id: v000001
+
+seeds:
+  edu_ext_edfacts_integration_tests:
+    +column_types:
+      lea_identifier_state: varchar
+      school_identifier_state: varchar
+      grade_level_membership: varchar
