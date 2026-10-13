@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EDFacts Files from Ed-Fi and EDU: Work Outline</title>
+<title>EDFacts Work Outline</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root {
@@ -14,9 +14,11 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
+  :root:not([data-theme="light"]) { --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
           --accent: #8db4ec; --accent-soft: #1d2f4a; color-scheme: dark; }
 }
+:root[data-theme="dark"] { --bg: #11161f; --surface: #182030; --fg: #e6eaf0; --muted: #9aa5b8; --rule: #2b3545;
+          --accent: #8db4ec; --accent-soft: #1d2f4a; color-scheme: dark; }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font-body); padding: 2.5rem 16px 4rem; }
