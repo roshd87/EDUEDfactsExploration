@@ -1,6 +1,6 @@
 # Handoff — EDUEDfacts
 
-Updated 2026-10-12 (repo split). Read this first, then `EDFactsOutputPlan.md` (the plan) and
+Updated 2026-10-15 (vault spec + companion notes). Read this first, then `EDFactsOutputPlan.md` (the plan) and
 `CLAUDE.md` (operating guide).
 
 ## What this repo is now
@@ -22,6 +22,8 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 | 1 — Generate hidden-logic pass | 336 rules the specs don't state; 39 SEA policy toggles. Headline kept in `EDFactsOutputPlan.md` Phase 1; register deleted at the split | — |
 | Field review (Opus manager + Sonnet workers) | 216 distinct fields, 88 shared (22 universal, 16 family-wide, 50 collection-specific); content reusable, positions per file | `wiki/analysis/EDFacts-2026-27-Shared-Fields.md`, `edfacts-2026-27-shared-fields.csv` |
 | 2 — Seeds + macros, FS052 | `tasks/build_edfacts_seeds.py` emits 4 seeds (byte-identical rebuild); `edfacts_counts` (GROUPING SETS + set/Total Indicator labels + zero-fill) and `edfacts_file` (header + fixed-width records); 3 spec tests. Fixture build: 21/21 pass, records 324 bytes, header 459 | `edu_ext_edfacts/` |
+| Vault spec notes | 20 specs (18 Active + FS224/FS225 Optional in SY 2025-26) converted from the SY 2026-27 DOCX into Obsidian notes: frontmatter, at-a-glance callout, pipe tables, Generate-domain links, index note. Deterministic rebuild | `wiki/edfacts/<FSnnn>/`, `wiki/edfacts/EDFacts Specs.md`, `tasks/convert_specs_to_vault.py` |
+| Vault companion notes | BRSI SY 2025-26 v1.04 (1173 rules; overview + a `<FSnnn> Business Rules` note per spec), Workbook SY 2025-26, and the newest guide for each of the 13 EDPass metadata collections, all cross-linked to the spec notes (FS mentions become wikilinks). No SY 2026-27 BRSI or Workbook existed at the freeze | `wiki/edfacts/{BRSI,Workbook,Metadata}/`, `tasks/convert_companions_to_vault.py` |
 | Synopsis page | One-page summary of the three analyses above | `wiki/analysis/EDFacts-2026-27-Findings.html`, published privately at https://claude.ai/artifact/2fVMftrtHYoBwWqYkaRVLa |
 
 ## Next steps
@@ -47,6 +49,25 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
    assessment zero counts (`wiki/analysis/EDFacts-2026-27-Delta.md`).
 5. **When files go Active:** re-run the fetch (below) for spec revisions and the SY 2026-27 BRSI.
 
+### On deck (vault)
+
+- **Port rules into dbt tests.** `wiki/edfacts/<FSnnn>/<FSnnn> Business Rules.md` now holds every
+  BRSI rule per spec with its logic and error message; the pre-submission rules for FS052, FS039
+  and FS029 are the candidates for `edu_ext_edfacts` tests (start with the 36 cross-file rules in
+  `BRSI SY 2025-26`).
+- **Derive `edfacts_config` columns from the metadata notes.** The four guides that apply to the
+  converted specs (CCD Grades Offered, CCD Staff FTE and Membership, IDEA Part B Child Count,
+  IDEA Part C Child Count) list each SEA policy question verbatim under "Responding to FS5xxx".
+- **When the SY 2026-27 BRSI and Workbook are published:** refresh the freeze, point
+  `BRSI_XLSX` / `WORKBOOK_PDF` in `tasks/convert_companions_to_vault.py` at the new files and
+  re-run the three-step vault rebuild. The metadata-guide picker reads the frozen page, so it
+  needs no change.
+- **If the 75 Inactive specs are ever needed in the vault:** widen the status filter in
+  `convert_specs_to_vault.py` (`("Active", "Optional")`); the per-spec rules notes follow
+  automatically.
+- Not carried into the vault: screenshots and figures in the PDFs, the EDPass general user and
+  account guides (`general/`), and prior-version companions the pages still link.
+
 ## Gotchas
 
 - **ed.gov refuses every non-browser client** (curl, PowerShell, headless Chrome, WebFetch → 403
@@ -65,6 +86,12 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
   lineage; their normalizer was P0 tooling and was deleted. Re-normalize from `tasks/reports/2026-27/`.
 - `tasks/extract_federal_table_cells.py` works only with `--all`; its default mode read a deleted
   P0 file.
+- **Vault conversion tooling** (details in `CLAUDE.md` § Tooling): system Python is externally
+  managed, so PDF/XLSX libraries live in `~/.venvs/edfacts-tools`; pandoc emits HTML tables for
+  any DOCX table with multi-paragraph cells, which the spec converter flattens to pipe tables;
+  Obsidian needs `\|` for the alias pipe of a wikilink inside a table cell.
+- **Vault rebuild order matters:** specs → companions → specs. The spec notes read the companion
+  notes' frontmatter for back-links; the companions read the spec catalog for link targets.
 
 ## Rebuild commands
 
@@ -74,4 +101,7 @@ python3 tasks/build_federal_delta.py 2025-26 2026-27
 python3 tasks/reports/field-review/validate_shards.py
 python3 tasks/reports/field-review/consolidate_shared_fields.py
 python3 tasks/build_edfacts_seeds.py --year 2026-27  # seeds; then dbt build per edu_ext_edfacts/README.md
+python3 tasks/convert_specs_to_vault.py              # wiki/edfacts/ Obsidian spec notes (needs pandoc)
+~/.venvs/edfacts-tools/bin/python tasks/convert_companions_to_vault.py  # BRSI/Workbook/metadata notes (venv: pip install openpyxl pymupdf4llm)
+python3 tasks/convert_specs_to_vault.py              # again: spec notes read the companion notes for back-links
 ```
