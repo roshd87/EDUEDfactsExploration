@@ -68,8 +68,8 @@ Vault rebuild order is specs → companions → specs (back-links). Full command
   `STATE.md` lines.
 - Specs are SY 2026-27 (all Inactive at freeze); BRSI and Workbook are SY 2025-26 because no newer
   ones existed. Refresh when files go Active.
-- Remote: public snapshot at github.com/roshd87/EDUEDfactsExploration; local `main` history is richer
-  and includes git-ignored material in older commits.
+- Remote: github.com/roshd87/EDUEDfactsExploration, same history as local `main`. The older history
+  with git-ignored material survives only as the local tag `archive/main-pre-reset`; never push it.
 
 ## Keeping this file current
 

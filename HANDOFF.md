@@ -80,7 +80,7 @@ count macro (one GROUP BY per category set, unioned), and a fixed-width record m
   DevTools protocol, launched from WSL via `powershell.exe Start-Process` with
   `--remote-debugging-port=9223`), pacing ~4 s per file, then `tasks/freeze_edfacts_catalog.py <year>`.
   Never hand-edit files under `wiki/reference/` (checksummed).
-- **Remote:** https://github.com/roshd87/EDUEDfactsExploration (public, added 2026-10-13; local-only before that). The frozen federal documents under `wiki/reference/edfacts/<year>/`, the Ed-Fi schema tarball, and `sources/generate/` are git-ignored and live only on disk (manifests and READMEs stay tracked). Local `main` history still contains them; the published branch is a snapshot without that history.
+- **Remote:** https://github.com/roshd87/EDUEDfactsExploration (public, added 2026-10-13; local-only before that). The frozen federal documents under `wiki/reference/edfacts/<year>/`, the Ed-Fi schema tarball, and `sources/generate/` are git-ignored and live only on disk (manifests and READMEs stay tracked). The pre-reset history that contained them is kept only under the local tag `archive/main-pre-reset` (never push it); `main` is the published snapshot history.
 - **dbt package macros:** a root project only sees them namespaced (`edu_ext_edfacts.x`), and
   that holds for calls between the package's own macros too. Each `ref()` must run at parse time,
   outside any `if execute` guard, or dbt can't infer the dependency.
