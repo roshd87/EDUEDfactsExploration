@@ -38,7 +38,8 @@ Related: [[analysis/EDFacts-2026-27-Delta|SY 2026-27 delta]] · [[analysis/EDFac
 Converted by `tasks/convert_companions_to_vault.py`. The BRSI and Workbook are the SY 2025-26 editions, the newest published at the freeze; each metadata guide is the newest version the EDPass metadata page links.
 
 - [[EDFacts Workbook SY 2025-26]] — EDPass roles, directory upload order, program-area file lists, FAQs, standard definitions, glossary
-- [[BRSI Rules Review for dbt Tests]] — Business Rules Single Inventory: scope, cross-file rules, version history; per-spec rules in the table above
+- [[BRSI SY 2025-26]] — Business Rules Single Inventory: scope, cross-file rules, version history; per-spec rules in the table above
+- [[BRSI Rules Review for dbt Tests]] — proposed dbt-test handling and decision per BRSI rule (`tasks/build_brsi_review.py`)
 
 | Metadata collection | Version | Year | Metadata specs | Applies to |
 |---|---|---|---|---|

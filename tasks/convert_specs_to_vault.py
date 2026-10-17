@@ -441,8 +441,10 @@ def companions(out: Path) -> dict:
                        "school_year": fm.get("school_year", ""), "metadata_specs": lst(fm.get("metadata_specs", "")),
                        "related_specs": lst(fm.get("related_specs", ""))})
     workbook = sorted(p.stem for p in (out / "Workbook").glob("*.md")) if (out / "Workbook").exists() else []
-    brsi = sorted(p.stem for p in (out / "BRSI").glob("*.md")) if (out / "BRSI").exists() else []
-    return {"guides": guides, "workbook": workbook[0] if workbook else "", "brsi": brsi[0] if brsi else ""}
+    brsi = sorted(p.stem for p in (out / "BRSI").glob("BRSI SY *.md")) if (out / "BRSI").exists() else []  # not the review note
+    review = (out / "BRSI" / "BRSI Rules Review for dbt Tests.md")
+    return {"guides": guides, "workbook": workbook[0] if workbook else "", "brsi": brsi[0] if brsi else "",
+            "review": review.stem if review.exists() else ""}
 
 
 # ----------------------------------------------------------------------------- notes
@@ -524,6 +526,8 @@ def index_note(specs: list[dict], comp: dict) -> str:
             lines.append(f"- [[{comp['workbook']}]] — EDPass roles, directory upload order, program-area file lists, FAQs, standard definitions, glossary")
         if comp["brsi"]:
             lines.append(f"- [[{comp['brsi']}]] — Business Rules Single Inventory: scope, cross-file rules, version history; per-spec rules in the table above")
+        if comp.get("review"):
+            lines.append(f"- [[{comp['review']}]] — proposed dbt-test handling and decision per BRSI rule (`tasks/build_brsi_review.py`)")
         if comp["guides"]:
             lines += ["", "| Metadata collection | Version | Year | Metadata specs | Applies to |", "|---|---|---|---|---|"]
             by_id = {s["fs_id"]: s["note"] for s in specs if not s["la"]}
