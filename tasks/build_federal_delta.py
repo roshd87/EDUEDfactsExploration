@@ -2,7 +2,7 @@
 
 Usage: python3 tasks/build_federal_delta.py 2025-26 2026-27
 Reads tasks/reports/<year>/federal-table-cells.csv and federal-document-blocks.csv (from
-extract_federal_table_cells.py --year <year> --all --out-dir tasks/reports/<year>) and writes
+extract_federal_table_cells.py --year <year>) and writes
 tasks/reports/<new>/federal-delta-<old>-to-<new>.csv: one row per (FS, section) with the number of
 normalized cell/block values added and removed, plus up to three examples each. Year strings,
 version numbers and whitespace are normalized away so only substantive text differences count.
@@ -29,20 +29,16 @@ def norm(v, old, new):
 
 
 def load(year, old, new):
-    base = ROOT / "tasks/reports" / year
-    cells = defaultdict(set)
-    with (base / "federal-table-cells.csv").open(encoding="utf-8", newline="") as fh:
-        for r in csv.DictReader(fh):
-            if SKIP_SECTIONS.search(r["section"]) or not r["value"].strip():
-                continue
-            cells[(r["file_spec_id"], r["section"])].add(norm(r["value"], old, new))
-    blocks = defaultdict(set)
-    with (base / "federal-document-blocks.csv").open(encoding="utf-8", newline="") as fh:
-        for r in csv.DictReader(fh):
-            if SKIP_SECTIONS.search(r["section"]) or not r["value"].strip():
-                continue
-            blocks[(r["file_spec_id"], r["section"])].add(norm(r["value"], old, new))
-    return cells, blocks
+    """[table cells, text blocks]: {(fs, section): {normalized values}} for one year's extraction."""
+    out = []
+    for name in ("federal-table-cells.csv", "federal-document-blocks.csv"):
+        values = defaultdict(set)
+        with (ROOT / "tasks/reports" / year / name).open(encoding="utf-8", newline="") as fh:
+            for r in csv.DictReader(fh):
+                if not SKIP_SECTIONS.search(r["section"]) and r["value"].strip():
+                    values[(r["file_spec_id"], r["section"])].add(norm(r["value"], old, new))
+        out.append(values)
+    return out
 
 
 def main(old, new):

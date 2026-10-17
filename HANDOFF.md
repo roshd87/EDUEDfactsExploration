@@ -1,6 +1,6 @@
 # Handoff — EDUEDfacts
 
-Updated 2026-10-17 (orientation map, docs checker, BRSI review sheet). Read `orientation.md` (repo map) and this file first,
+Updated 2026-10-17 (orientation map, docs checker, BRSI review sheet, lean-up after the over-engineering audit). Read `orientation.md` (repo map) and this file first,
 then `EDFactsOutputPlan.md` (the plan) and `CLAUDE.md` (operating guide).
 
 ## What this repo is now
@@ -11,7 +11,7 @@ and the repo was deleted on 2026-10-13. The Generate-to-Ed-Fi mapping registers 
 Generate hidden-logic register were deleted at the split and are not recoverable (no remote).
 
 The target is a dbt extension package (`edu_ext_edfacts`) over `edu_wh` marts: spec-derived seeds for category sets, layouts and permitted values, a
-GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a reading source only.
+count macro (one GROUP BY per category set, unioned), and a fixed-width record macro. CEDS Generate is a reading source only.
 
 ## Done
 
@@ -21,12 +21,13 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 | 0 — Two-year delta | 83 specs editorial only, 11 with guidance changes, no layout changes; "metadata survey" → FS5002–FS5029 metadata collections | `wiki/analysis/EDFacts-2026-27-Delta.md` |
 | 1 — Generate hidden-logic pass | 336 rules the specs don't state; 39 SEA policy toggles. Headline kept in `EDFactsOutputPlan.md` Phase 1; register deleted at the split | — |
 | Field review (Opus manager + Sonnet workers) | 216 distinct fields, 88 shared (22 universal, 16 family-wide, 50 collection-specific); content reusable, positions per file | `wiki/analysis/EDFacts-2026-27-Shared-Fields.md`, `edfacts-2026-27-shared-fields.csv` |
-| 2 — Seeds + macros, FS052 | `tasks/build_edfacts_seeds.py` emits 4 seeds (byte-identical rebuild); `edfacts_counts` (GROUPING SETS + set/Total Indicator labels + zero-fill) and `edfacts_file` (header + fixed-width records); 3 spec tests. Fixture build: 21/21 pass, records 324 bytes, header 459 | `edu_ext_edfacts/` |
+| 2 — Seeds + macros, FS052 | `tasks/build_edfacts_seeds.py` emits 4 seeds (byte-identical rebuild); `edfacts_counts` (one GROUP BY per category set, labelled and unioned with its zero-fill) and `edfacts_file` (header + fixed-width records); 3 spec tests. Fixture build: 21/21 pass, records 324 bytes, header 459 | `edu_ext_edfacts/` |
 | Vault spec notes | 20 specs (18 Active + FS224/FS225 Optional in SY 2025-26) converted from the SY 2026-27 DOCX into Obsidian notes: frontmatter, at-a-glance callout, pipe tables, Generate-domain links, index note. Deterministic rebuild | `wiki/edfacts/<FSnnn>/`, `wiki/edfacts/EDFacts Specs.md`, `tasks/convert_specs_to_vault.py` |
 | Vault companion notes | BRSI SY 2025-26 v1.04 (1173 rules; overview + a `<FSnnn> Business Rules` note per spec), Workbook SY 2025-26, and the newest guide for each of the 13 EDPass metadata collections, all cross-linked to the spec notes (FS mentions become wikilinks). No SY 2026-27 BRSI or Workbook existed at the freeze | `wiki/edfacts/{BRSI,Workbook,Metadata}/`, `tasks/convert_companions_to_vault.py` |
 | Synopsis page | One-page summary of the three analyses above | `wiki/analysis/EDFacts-2026-27-Findings.html`, published privately at https://claude.ai/artifact/2fVMftrtHYoBwWqYkaRVLa |
 | BRSI rules review sheet | 315 rules with a proposed dbt-test handling and pre-set decision each (202 test now, 92 later, 12 not SQL, 9 n/a); linked from the BRSI note and the spec index. Decisions live in a Claude Doc (see On deck) | `wiki/edfacts/BRSI/BRSI Rules Review for dbt Tests.md`, `tasks/build_brsi_review.py` |
 | Agent orientation | `orientation.md` maps the repo (generated vs hand-written vs frozen, pipelines, traps); `tasks/check_docs.py` reports paths the orientation docs name that are not on disk, plus missing venvs and frozen docs. Evaluated and rejected skills for refreshing/onboarding: a CLAUDE.md pointer plus the script covers it | `orientation.md`, `tasks/check_docs.py`, `docs/agents/issue-tracker.md` (now matches the real `.planning/` layout) |
+| Lean-up (over-engineering audit, 2026-10-17) | Dead driver, flags and duplicate helpers removed from the task scripts; `edfacts_counts` rewritten as one GROUP BY per set (same rows, 21/21 tests); GSD `config.json`, the two template agent docs and the SY 2025-26 `federal-normalized-*` lineage CSVs deleted (git history keeps them); every generated output rebuilt byte-identical | `tasks/`, `edu_ext_edfacts/` |
 
 ## Next steps
 
@@ -86,10 +87,6 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 - Generate defects that make files empty or wrong as shipped are catalogued in
   `wiki/generate/repo/Source-Code-Oddities.md`; check there before porting
   Generate logic.
-- `tasks/reports/federal-normalized-*.csv` and `federal-record-layout.csv` are frozen SY 2025-26
-  lineage; their normalizer was P0 tooling and was deleted. Re-normalize from `tasks/reports/2026-27/`.
-- `tasks/extract_federal_table_cells.py` works only with `--all`; its default mode read a deleted
-  P0 file.
 - **Vault conversion tooling** (details in `CLAUDE.md` § Tooling): system Python is externally
   managed, so PDF/XLSX libraries live in `~/.venvs/edfacts-tools`; pandoc emits HTML tables for
   any DOCX table with multi-paragraph cells, which the spec converter flattens to pipe tables;
@@ -102,7 +99,7 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 ## Rebuild commands
 
 ```sh
-python3 tasks/extract_federal_table_cells.py --year 2026-27 --all --out-dir tasks/reports/2026-27
+python3 tasks/extract_federal_table_cells.py --year 2026-27  # tasks/reports/2026-27/federal-{table-cells,document-blocks}.csv
 python3 tasks/build_federal_delta.py 2025-26 2026-27
 python3 tasks/reports/field-review/validate_shards.py
 python3 tasks/reports/field-review/consolidate_shared_fields.py

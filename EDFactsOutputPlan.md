@@ -28,13 +28,11 @@ silent.
 
 | Asset | Where | Reuse |
 |---|---|---|
-| Spec-derived category sets per FS × org level (1,345 rows, SY 2025-26 normalization) | `tasks/reports/federal-normalized-grain.csv` | seed the count engine's category-set metadata; re-normalize from `tasks/reports/2026-27/` in Phase 2 |
-| Spec-derived record layouts (3,859 rows) | `tasks/reports/federal-record-layout.csv` | seed the fixed-width writer |
-| Spec-derived permitted values (1,704 rows) | `tasks/reports/federal-normalized-values.csv` | seed `accepted_values` tests and xwalk targets |
+| Spec-derived category sets, record layouts and permitted values (SY 2026-27, from the Pandoc cells) | `edu_ext_edfacts/seeds/` via `tasks/build_edfacts_seeds.py` | the count engine's metadata, the fixed-width writer, `accepted_values` tests and xwalk targets (the SY 2025-26 `federal-normalized-*.csv` lineage was removed 2026-10-17; git history keeps it) |
 | Element-level Ed-Fi gap clusters: staff qualifications, org governance/finance, foster care | `wiki/analysis/EDFacts-EdFi-Gap-Analysis.md` | scope of side-door data |
 | 24 domain notes: every Generate wrapper's inputs, filters, report codes | `wiki/generate/domains/` | the per-collection rule inventory |
 | Verified Generate defects and dead paths | `wiki/generate/repo/Source-Code-Oddities.md` | what **not** to port |
-| Pandoc extraction for DOCX specs | `tasks/extract_federal_table_cells.py --all` | re-run on SY 2026-27 DOCX; the 2025-26 normalizer was P0 tooling and is gone, so `federal-normalized-*.csv` and `federal-record-layout.csv` are frozen 2025-26 lineage |
+| Pandoc extraction for DOCX specs | `tasks/extract_federal_table_cells.py` | every catalog spec of a year to `tasks/reports/<year>/`; the 2025-26 normalizer was P0 tooling and is gone |
 | EDU warehouse model map (sibling vault) | `/mnt/c/Repos/EDUAPIExplorer/wiki/repos/edu-wh/` | source models per EDFacts input |
 
 The seam thesis from the P0 work carries over unchanged: Generate's `App` metadata half
@@ -51,7 +49,7 @@ flowchart LR
   WH --> POP["edfacts_pop__fs###: one row per student/staff/org with EDFacts category columns"]
   SPEC["Spec seeds: category sets, layouts, permitted values (from federal-*.csv)"] --> CNT
   CFG["edfacts_config seeds: count dates, age bands, SEA toggle answers; xwalk_edfacts_* value maps"] --> POP
-  POP --> CNT["edfacts_count__fs###: GROUPING SETS over category columns → count rows incl. totals"]
+  POP --> CNT["edfacts_count__fs###: one GROUP BY per category set, unioned → count rows incl. totals"]
   CNT --> REC["edfacts_file__fs###: header + fixed-width records (RPAD/LPAD), ordered"]
   REC -->|COPY INTO stage / Airflow task| FILE["FS###.txt → EDPass"]
   BRSI["BRSI edit checks as dbt tests"] -.-> CNT
@@ -61,10 +59,10 @@ One dbt package, working name `edu_ext_edfacts`, following the `edu_ext_*` exten
 (reads `edu_wh` marts and its own seeds, defines no sources). Three model layers per file spec,
 one macro family, four seed families, and a single export task. Deliberate omissions:
 
-- **No generic count-SQL generator.** `GROUP BY GROUPING SETS` produces every category-set
-  combination and its totals natively. Generate's 7,706-line `RDS.Get_CountSQL` exists because
-  SQL Server 2008-era code built the SQL text by hand. ponytail: one macro that emits the grouping
-  sets from the category-set seed; upgrade only if a spec needs a non-cube total.
+- **No generic count-SQL generator.** One `GROUP BY` per category set from the seed, unioned with
+  its zero-fill, produces every combination and total natively (GROUPING SETS was the first cut;
+  the per-set union is shorter and labels each row directly). Generate's 7,706-line
+  `RDS.Get_CountSQL` exists because SQL Server 2008-era code built the SQL text by hand.
 - **No report-row star schema.** `edfacts_count__*` tables are the report rows. No equivalent of
   `RDS.ReportEDFacts*` is needed because nothing else reads them.
 - **No app shell, no toggle UI.** SEA policy answers are seed rows (they are EDPass metadata
@@ -87,7 +85,7 @@ them into `wiki/reference/edfacts/2026-27/` (94 DOCX, 43 companion documents, `M
 **Outcome:** 93 FS ids, all v23.x, all Inactive at freeze; FS112 dropped, none added; 83 specs
 editorial-only, 11 with guidance changes, no record-layout changes. Full account:
 `wiki/analysis/EDFacts-2026-27-Delta.md`. Both years are now extracted in full under
-`tasks/reports/2025-26/` and `tasks/reports/2026-27/` (`extract_federal_table_cells.py --year … --all`).
+`tasks/reports/2025-26/` and `tasks/reports/2026-27/` (`extract_federal_table_cells.py --year …`).
 
 **New fact that reshapes Phase 2:** the specs now cite EDPass metadata *collections* FS5002–FS5029
 instead of a survey. The SEA policy answers Generate held as toggles are themselves EDFacts files;
@@ -127,7 +125,7 @@ per-rule rows do not. Re-derive individual rules from the Generate wiki
    basis, EL status, discipline action, removal reason, staff classification …). Pre-fill from
    the Ed-Fi 6.1 default descriptor sets (`wiki/reference/ed-fi/6.1.0/`); leave state-specific
    rows blank for the partner.
-4. Macros: `edfacts_counts(pop_model, fs, org_level)` emitting the GROUPING SETS query from the
+4. Macros: `edfacts_counts(pop_model, fs, org_level)` emitting one GROUP BY per category set from the
    category-set seed, including zero-fill for required combinations and the Total Indicator rows;
    `edfacts_record(fs, org_level)` emitting the fixed-width concatenation from the layout seed;
    `edfacts_header(fs)`.

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Losslessly export cached EDFacts DOCX table cells using Pandoc's JSON AST."""
+"""Losslessly export cached EDFacts DOCX table cells using Pandoc's JSON AST.
+
+Every spec in the year's CATALOG-INVENTORY.tsv -> tasks/reports/<year>/federal-{table-cells,document-blocks}.csv.
+
+    python3 tasks/extract_federal_table_cells.py [--year 2026-27]
+"""
 import argparse
 import csv
 import json
@@ -8,18 +13,14 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-# Defaults reproduce the frozen SY2025-26 run (driver = the hand-curated bindings list).
-# `--year 2026-27 --all --out-dir tasks/reports/2026-27` extracts every catalog spec of another year.
 ARGS = argparse.ArgumentParser(description=__doc__)
-ARGS.add_argument("--year", default="2025-26")
-ARGS.add_argument("--all", action="store_true", help="drive from the catalog inventory, not the bindings list")
-ARGS.add_argument("--out-dir", default="tasks/reports")
+ARGS.add_argument("--year", default="2026-27")
 OPTS = ARGS.parse_args()
-INPUT = ROOT / "tasks/reports/canonical-shards/federal-grain/federal-grain-bindings.csv"  # ponytail: P0 bindings file was deleted in the 2026-10-12 split; only --all mode works
 SPECS_DIR = ROOT / f"wiki/reference/edfacts/{OPTS.year}/file-specifications"
 CATALOG = SPECS_DIR / "CATALOG-INVENTORY.tsv"
-TABLE_OUT = ROOT / OPTS.out_dir / "federal-table-cells.csv"
-BLOCK_OUT = ROOT / OPTS.out_dir / "federal-document-blocks.csv"
+OUT_DIR = ROOT / "tasks/reports" / OPTS.year
+TABLE_OUT = OUT_DIR / "federal-table-cells.csv"
+BLOCK_OUT = OUT_DIR / "federal-document-blocks.csv"
 TABLE_RE = re.compile(r"\bTable\s+2\.\d", re.I)
 
 
@@ -68,23 +69,9 @@ def catalog_paths():
     return result
 
 
-def source_specs():
-    if OPTS.all:
-        return sorted(catalog_paths())
-    with INPUT.open(encoding="utf-8", newline="") as handle:
-        return [(row["file_spec_id"], row["file_spec_version"]) for row in csv.DictReader(handle)]
-
-
 def main():
     paths = catalog_paths()
-    specs = source_specs()
-    duplicates = [pair for pair, count in
-                  ((pair, specs.count(pair)) for pair in set(specs)) if count > 1]
-    if duplicates:
-        raise AssertionError(f"duplicate (spec, version) pairs in driver list: {sorted(duplicates)}")
-    unresolved = [pair for pair in specs if pair not in paths]
-    if unresolved:
-        raise AssertionError(f"driver list pairs with no cached DOCX in CATALOG-INVENTORY.tsv: {sorted(unresolved)}")
+    specs = sorted(paths)
 
     cells, blocks = [], []
     for fs_id, version in specs:

@@ -1,4 +1,4 @@
-import csv,glob,re,collections,sys
+import csv,glob,re,collections
 R='/mnt/c/Repos/EDUEDfacts/'
 FAM={'b1-idea':'IDEA Part B/C + dispute resolution','b2-directory-org':'Directory, org & accountability','b3-student-staff':'Student counts & staff','b4-assessment-el':'Assessment & EL','b5-program':'Program participation'}
 def norm(n):
@@ -126,7 +126,6 @@ out.sort(key=lambda x:(-x['specs_count'],x['field_name_normalized']))
 cols='field_name_normalized,specs_count,specs,record_kinds,position_consistent,length_consistent,definition_identical,permitted_values_identical,canonical_definition,variants,reuse_class'.split(',')
 with open(R+'wiki/analysis/edfacts-2026-27-shared-fields.csv','w',newline='',encoding='utf-8') as fh:
     w=csv.DictWriter(fh,fieldnames=cols,extrasaction='ignore',lineterminator='\n'); w.writeheader(); w.writerows(out)
-import json; json.dump(out,open(sys.argv[1],'w')) if len(sys.argv)>1 else None
 print('distinct normalized fields',len(g),'shared',len(out))
 print(collections.Counter(o['reuse_class'] for o in out))
 print('def',collections.Counter(o['definition_identical'] for o in out),'pv',collections.Counter(o['permitted_values_identical'] for o in out))

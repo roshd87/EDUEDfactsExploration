@@ -13,7 +13,7 @@ citation, or set as named configuration.
 - [ ] **SEED-01** `tasks/build_edfacts_seeds.py` derives category-set, layout, permitted-value, header seeds from `federal-*.csv`, byte-stable on rebuild
 - [ ] **SEED-02** `edfacts_config` seed has a column for every SEA policy answer, shaped to the FS5002–FS5029 metadata collections
 - [ ] **SEED-03** `xwalk_edfacts_*` seeds exist per category family, pre-filled from Ed-Fi 6.1 default descriptors (`wiki/reference/ed-fi/6.1.0/`)
-- [ ] **MAC-01** `edfacts_counts` macro renders GROUPING SETS query for any FS/org level from seeds
+- [ ] **MAC-01** `edfacts_counts` macro renders the per-set count query for any FS/org level from seeds
 - [ ] **MAC-02** `edfacts_record`/`edfacts_header` macros render the fixed-width layout from seeds
 - [ ] **TEST-01** permitted-value and SQL-expressible BRSI rules exist as dbt tests
 - [ ] **SLICE-01** FS052 (+FS039) file from sample Ed-Fi data passes TEST-01

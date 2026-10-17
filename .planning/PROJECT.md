@@ -30,7 +30,7 @@ configuration. No rule is invented silently.
   federal CSVs
 - [ ] **SEED-02**: `edfacts_config` and `xwalk_edfacts_*` seed schemas cover every SEA policy
   answer the FS5002–FS5029 metadata collections and the built specs need
-- [ ] **MAC-01**: Count macro (GROUPING SETS) and record macro render FS052 from seeds alone
+- [ ] **MAC-01**: Count macro (one GROUP BY per category set, unioned) and record macro render FS052 from seeds alone
 - [ ] **SLICE-01..03**: Membership (FS052+FS039), Child Count (FS002/FS089), Directory (FS029)
   files pass SQL-expressible BRSI checks on sample Ed-Fi data
 - [ ] **ROLL-01..07**: remaining collections by wave (see plan §4 Phase 4)
@@ -56,7 +56,7 @@ configuration. No rule is invented silently.
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Regenerate category sets/layouts/values from the specs, not from Generate `App` metadata | spec is the authority; extraction chain already exists | — Pending E-series |
-| GROUPING SETS replaces a count-SQL generator | native SQL does what `Get_CountSQL` hand-built | — Pending |
+| Per-set GROUP BY + UNION ALL replaces a count-SQL generator (GROUPING SETS until 2026-10-17) | native SQL does what `Get_CountSQL` hand-built | — Pending |
 | SEA policy toggles become seeds | they are EDPass metadata survey answers the state already holds | — Pending |
 
 *Last updated: 2026-10-07 at pivot*

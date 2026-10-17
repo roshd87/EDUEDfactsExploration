@@ -4,7 +4,7 @@
 
 Produce EDPass-submittable EDFacts files from an **Ed-Fi + EDU/Stadium** warehouse (`edu_wh` dbt
 marts) as a dbt extension package, `edu_ext_edfacts/`: spec-derived seeds (category sets, layouts,
-permitted values), a GROUPING SETS count macro, and a fixed-width record macro. Plan:
+permitted values), a count macro (one GROUP BY per category set, unioned), and a fixed-width record macro. Plan:
 `EDFactsOutputPlan.md`. Status and next steps: `HANDOFF.md`. Tracker: `.planning/` (see
 `docs/agents/issue-tracker.md`). Split out of `GenerateExplorer` on 2026-10-12 (that repo was deleted 2026-10-13). The
 read-only wiki of how CEDS Generate works lives here at `wiki/generate/` (moved 2026-10-13; reading
@@ -34,15 +34,8 @@ DevTools protocol from WSL), then `tasks/freeze_edfacts_catalog.py <year>`.
 
 ## Build
 
-```sh
-python3 tasks/build_edfacts_seeds.py --year 2026-27   # byte-identical rebuild of edu_ext_edfacts/seeds
-python3 tasks/convert_specs_to_vault.py                 # wiki/edfacts/: Obsidian notes for the 20 SY 2025-26 Active/Optional specs
-~/.venvs/edfacts-tools/bin/python tasks/convert_companions_to_vault.py   # + BRSI, Workbook, metadata guides (needs openpyxl, pymupdf4llm)
-python3 tasks/convert_specs_to_vault.py                 # again, so spec notes pick up the companion back-links
-~/.venvs/edfacts-tools/bin/python tasks/build_brsi_review.py            # BRSI rules review sheet (proposed dbt-test handling per rule)
-```
-
-Then `dbt build` per `edu_ext_edfacts/README.md`. Full rebuild list in `HANDOFF.md`.
+The rebuild commands (extraction, seeds, vault notes, BRSI review sheet) are listed once, in
+`HANDOFF.md` § Rebuild commands; then `dbt build` per `edu_ext_edfacts/README.md`.
 
 The Obsidian vault is `wiki/`. Legible per-spec notes (frontmatter, at-a-glance callout, pipe
 tables, links to the Generate domain notes) live under `wiki/edfacts/<FSnnn>/`, indexed by
@@ -79,4 +72,3 @@ EDPass metadata guides under `wiki/edfacts/{Workbook,BRSI,Metadata}/`; all gener
 ## Agent skills
 
 - Issue tracker: `.planning/` phase plans, local-only repo. See `docs/agents/issue-tracker.md`.
-- Triage labels: `docs/agents/triage-labels.md`. Domain docs: `docs/agents/domain.md`.

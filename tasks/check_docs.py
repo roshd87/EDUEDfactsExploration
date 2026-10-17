@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ["CLAUDE.md", "HANDOFF.md", "orientation.md", "docs/agents/issue-tracker.md"]  # domain.md is a generic template
+DOCS = ["CLAUDE.md", "HANDOFF.md", "orientation.md", "docs/agents/issue-tracker.md"]
 # ponytail: a path is any backticked token containing "/" that isn't a URL, flag, glob or variable.
 SKIP = re.compile(r"^(-|~|\$|https?:|[A-Za-z]:\\|\.\./)|[*?$]")
 # Paths this repo documents but only the owner's machine or a future phase holds.

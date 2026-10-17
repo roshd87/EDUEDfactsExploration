@@ -88,7 +88,6 @@ class TableParser(HTMLParser):
         self.cell: list[str] | None = None
         self.skip = 0  # inside <caption>
         self.href: str | None = None
-        self.list_depth = 0
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -114,8 +113,6 @@ class TableParser(HTMLParser):
             elif tag == "a":
                 self.href = a.get("href")
                 self.cell.append("[")
-            elif tag in ("ul", "ol"):
-                self.list_depth += 1
             elif tag == "li":
                 if self.cell and self.cell[-1] not in ("<br>",):
                     self.cell.append("<br>")
@@ -142,8 +139,6 @@ class TableParser(HTMLParser):
             elif tag == "a":
                 self.cell.append(f"]({self.href})" if self.href else "]")
                 self.href = None
-            elif tag in ("ul", "ol"):
-                self.list_depth -= 1
 
     def handle_data(self, data):
         if self.skip or self.cell is None:
@@ -209,7 +204,7 @@ BACK_COVER = re.compile(r"\n+The Department of Education'?s mission is to promot
 
 
 def edfacts_word(text: str) -> str:
-    return re.sub(r"ED\*Fact\*?s\*?", "EDFacts", text).replace("ED*Facts*", "EDFacts")
+    return re.sub(r"ED\*Fact\*?s\*?", "EDFacts", text)
 
 
 def title_case_heading(text: str) -> str:
@@ -243,7 +238,7 @@ def document_history(front: str) -> str:
         return ""
     table = m.group(1).rstrip("\n").splitlines()
     # pandoc emits a blank header row; promote the first body row to the header.
-    if table and set(table[0].replace("|", "").strip()) <= set():
+    if table and not table[0].replace("|", "").strip():
         table = table[2:]
         table.insert(1, "|" + "---|" * (table[0].count("|") - 1))
     return "\n".join(table)
@@ -269,7 +264,7 @@ def is_caption_residue(line: str) -> bool:
     return bool(re.search(r"[a-z][A-Z]", line)) or line.count(",") >= 2 and not re.search(r"\b(and|or)\b", line)
 
 
-def clean_body(body: str, out_media: Path, boilerplate_media: set[str], media_dir: Path) -> tuple[str, list[str]]:
+def clean_body(body: str, out_media: Path, boilerplate_media: set[str]) -> tuple[str, list[str]]:
     dropped: list[str] = []
     body = HTML_TABLE.sub(lambda m: html_table_to_pipe(m.group(0)), body)
     body = ANCHOR_SPAN.sub("", body)
@@ -450,10 +445,11 @@ def companions(out: Path) -> dict:
 # ----------------------------------------------------------------------------- notes
 
 
-def frontmatter(meta: dict) -> str:
-    def q(s: str) -> str:
-        return '"' + s.replace('"', '\\"') + '"'
+def q(s) -> str:
+    return '"' + str(s).replace('"', '\\"') + '"'
 
+
+def frontmatter(meta: dict) -> str:
     lines = ["---"]
     lines.append(f"fs_id: {meta['fs_id']}")
     lines.append(f"title: {q(meta['title'])}")
@@ -537,17 +533,12 @@ def index_note(specs: list[dict], comp: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def q(s: str) -> str:
-    return '"' + s + '"'
-
-
 # ----------------------------------------------------------------------------- main
 
 
-def main() -> int:
+def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, default=ROOT / "wiki" / "edfacts")
-    ap.add_argument("--only", nargs="*", help="FS ids to convert (default all)")
     args = ap.parse_args()
 
     old = [r for r in read_inventory(FILTER_YEAR) if r["status"] in ("Active", "Optional")]
@@ -558,65 +549,62 @@ def main() -> int:
     work = []
     for r in old:
         key = spec_key(r)
-        if args.only and key[0] not in args.only:
-            continue
         n = new.get(key)
         if not n:
             print(f"!! {key} not in {TARGET_YEAR} catalog", file=sys.stderr)
             continue
         work.append((r, n, key))
 
-    tmp = Path(tempfile.mkdtemp(prefix="specs-"))
-    converted = []
-    for r, n, key in work:
-        docx = REF / TARGET_YEAR / "file-specifications" / n["filename"]
-        media = tmp / f"media-{key[0]}{'-LA' if key[1] else ''}"
-        converted.append((r, n, key, pandoc_md(docx, media), media))
+    with tempfile.TemporaryDirectory(prefix="specs-") as tmpdir:
+        tmp = Path(tmpdir)
+        converted = []
+        for r, n, key in work:
+            docx = REF / TARGET_YEAR / "file-specifications" / n["filename"]
+            media = tmp / f"media-{key[0]}{'-LA' if key[1] else ''}"
+            converted.append((r, n, key, pandoc_md(docx, media), media))
 
-    # Images that appear in most specs are letterhead; drop them.
-    counts: Counter[str] = Counter()
-    for *_, media in converted:
-        counts.update({md5(p) for p in media.rglob("*") if p.is_file()})
-    boilerplate = {h for h, c in counts.items() if c >= max(3, len(converted) // 2)}
+        # Images that appear in most specs are letterhead; drop them.
+        counts: Counter[str] = Counter()
+        for *_, media in converted:
+            counts.update({md5(p) for p in media.rglob("*") if p.is_file()})
+        boilerplate = {h for h, c in counts.items() if c >= max(3, len(converted) // 2)}
 
-    specs = []
-    all_dropped = []
-    comp = companions(args.out)
-    for r, n, key, md, media in converted:
-        name, dgs, ver = parse_title(n["title"])
-        fs_id, la = key
-        folder = args.out / fs_id
-        folder.mkdir(parents=True, exist_ok=True)
-        note_name = f"{fs_id} {name}"
-        rel_docx = f"wiki/reference/edfacts/{TARGET_YEAR}/file-specifications/{n['filename']}"
-        rules_note = f"{fs_id} Business Rules"
-        meta = {
-            "fs_id": fs_id, "la": la, "title": name, "version": ver, "data_groups": dgs,
-            "status_2025_26": r["status"], "status_2026_27": n["status"],
-            "generate_domains": domains.get(fs_id, []),
-            "source_docx": rel_docx, "source_url": n["source_url"],
-            "sha256": manifest.get(f"file-specifications/{n['filename']}", {}).get("sha256", ""),
-            "note": note_name,  # basenames are unique in the vault, so links need no folder
-            "rules_note": rules_note if (folder / f"{rules_note}.md").exists() else "",
-            "metadata_notes": [g["note"] for g in comp["guides"] if fs_id in g["related_specs"]],
-            "workbook_note": comp["workbook"],
-        }
-        front, body = split_front_matter(md)
-        body, dropped = clean_body(body, folder / "media", boilerplate, media)
-        all_dropped += [(fs_id, d) for d in dropped]
-        (folder / f"{note_name}.md").write_text(build_note(meta, body, document_history(front)), encoding="utf-8")
-        specs.append(meta)
-        print(f"{fs_id}{' LA' if la else '':3} {ver} {name}")
+        specs = []
+        all_dropped = []
+        comp = companions(args.out)
+        for r, n, key, md, media in converted:
+            name, dgs, ver = parse_title(n["title"])
+            fs_id, la = key
+            folder = args.out / fs_id
+            folder.mkdir(parents=True, exist_ok=True)
+            note_name = f"{fs_id} {name}"
+            rel_docx = f"wiki/reference/edfacts/{TARGET_YEAR}/file-specifications/{n['filename']}"
+            rules_note = f"{fs_id} Business Rules"
+            meta = {
+                "fs_id": fs_id, "la": la, "title": name, "version": ver, "data_groups": dgs,
+                "status_2025_26": r["status"], "status_2026_27": n["status"],
+                "generate_domains": domains.get(fs_id, []),
+                "source_docx": rel_docx, "source_url": n["source_url"],
+                "sha256": manifest.get(f"file-specifications/{n['filename']}", {}).get("sha256", ""),
+                "note": note_name,  # basenames are unique in the vault, so links need no folder
+                "rules_note": rules_note if (folder / f"{rules_note}.md").exists() else "",
+                "metadata_notes": [g["note"] for g in comp["guides"] if fs_id in g["related_specs"]],
+                "workbook_note": comp["workbook"],
+            }
+            front, body = split_front_matter(md)
+            body, dropped = clean_body(body, folder / "media", boilerplate)
+            all_dropped += [(fs_id, d) for d in dropped]
+            (folder / f"{note_name}.md").write_text(build_note(meta, body, document_history(front)), encoding="utf-8")
+            specs.append(meta)
+            print(f"{fs_id}{' LA' if la else '':3} {ver} {name}")
 
     (args.out / "EDFacts Specs.md").write_text(index_note(specs, comp), encoding="utf-8")
-    shutil.rmtree(tmp, ignore_errors=True)
     if all_dropped:
         print("\nDropped caption residue:")
         for fs, d in all_dropped:
             print(f"  {fs}: {d}")
     print(f"\n{len(specs)} notes -> {args.out}")
-    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

@@ -1,7 +1,7 @@
 # Issue tracker: `.planning/` phase plans
 
 The public remote (github.com/roshd87/EDUEDfactsExploration) has no issues enabled. Work is
-tracked in the repo's `.planning/` system (GSD-style; `config.json` is that tool's settings).
+tracked in the repo's `.planning/` system (GSD-style layout; no tool config file is kept).
 
 ## Layout
 
@@ -30,5 +30,6 @@ that phase's `NN-CONTEXT.md` and `ROADMAP.md` entry. Requirement IDs resolve in 
 ## When a skill says "publish to the issue tracker"
 
 Add a file under `.planning/todos/` (ad-hoc) or a new `<NN>-<MM>-PLAN.md` in the current phase
-directory. Record triage state as a `Status:` line near the top (strings in `triage-labels.md`).
+directory. Record triage state as a `Status:` line near the top, one of `needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human` or `wontfix`.
 Append discussion under a `## Comments` heading.

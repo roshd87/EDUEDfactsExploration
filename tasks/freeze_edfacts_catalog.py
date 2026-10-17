@@ -12,6 +12,7 @@ import html
 import re
 import shutil
 import sys
+from collections import Counter
 from datetime import date
 from pathlib import Path
 
@@ -33,11 +34,8 @@ FS = re.compile(r"\b(FS\d{3})\b.*?\bv(\d+\.\d+)\b", re.S)
 
 
 def sha256(p):
-    h = hashlib.sha256()
     with p.open("rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
+        return hashlib.file_digest(fh, "sha256").hexdigest()
 
 
 def strip(t):
@@ -126,13 +124,10 @@ def main(year):
         w.writeheader()
         for m in manifest:
             w.writerow({**m, "reporting_year": year, "frozen_at": frozen, "status": "authoritative cached"})
+    (inbox / "download-log.tsv").unlink(missing_ok=True)
     rest = [p.name for p in inbox.iterdir()] if inbox.exists() else []
-    for name in rest:
-        if name == "download-log.tsv":
-            (inbox / name).unlink()
-    if inbox.exists() and not any(inbox.iterdir()):
+    if inbox.exists() and not rest:
         inbox.rmdir()
-    from collections import Counter
     print(f"specs={len(inventory)} {dict(Counter(r['status'] for r in inventory))} manifest_rows={len(manifest)} inbox_left={rest}")
 
 

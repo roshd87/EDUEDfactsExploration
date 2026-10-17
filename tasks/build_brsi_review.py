@@ -18,7 +18,7 @@ from pathlib import Path
 import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from convert_companions_to_vault import BRSI_LABEL, BRSI_XLSX, OUT, spec_notes  # noqa: E402
+from convert_companions_to_vault import BRSI_LABEL, BRSI_XLSX, OUT, brsi_rows, rule_fs_ids, spec_notes  # noqa: E402
 from convert_specs_to_vault import FROZEN, REF, TARGET_YEAR, read_manifest  # noqa: E402
 
 REVIEW_DOC_URL = "https://claude.ai/code/artifact/0d1fae66-f6a9-49f2-8c08-4875755c4d9a"
@@ -26,9 +26,9 @@ NOTE = OUT / "BRSI" / "BRSI Rules Review for dbt Tests.md"
 DECISIONS = ["Test now", "Test later", "Not a dbt test", "Needs discussion"]
 SECTIONS = [  # (heading, FS ids that claim a rule; a rule goes to the first section that claims it)
     ("Cross-file rules", None),
-    ("FS052 Membership and FS039 Grades Offered", {"052", "039"}),
-    ("FS002 and FS089 IDEA child count", {"002", "089"}),
-    ("FS029 Directory", {"029"}),
+    ("FS052 Membership and FS039 Grades Offered", {"FS052", "FS039"}),
+    ("FS002 and FS089 IDEA child count", {"FS002", "FS089"}),
+    ("FS029 Directory", {"FS029"}),
     ("Remaining specs: FS033, FS059, FS129, charter files, N or D, IDEA Part C", "rest"),
 ]
 PRIOR_YEAR = re.compile(r"prior year|previous year|prior school year|previous school year|year to year|prior sy|previous sy|from py|changed from py")
@@ -94,23 +94,8 @@ OVERRIDES = {
 }
 
 
-def cell(v) -> str:
-    s = "" if v is None else str(v).strip()
-    return "" if s.lower() in ("none", "nan") else s
-
-
 def md(s: str) -> str:
     return re.sub(r"\s*\n+\s*", "<br>", s.replace("|", "\\|")).strip()
-
-
-def rows(wb, sheet):
-    r = list(wb[sheet].iter_rows(values_only=True))
-    hdr = [cell(h) for h in r[0]]
-    return [dict(zip(hdr, (cell(c) for c in x))) for x in r[1:] if any(cell(c) for c in x)]
-
-
-def fs_ids(r):
-    return re.findall(r"\b(\d{3})\b", r["FS"])
 
 
 def levels(r):
@@ -126,7 +111,7 @@ def triage(r, in_scope: set[str]):
     if rid in OVERRIDES:
         h, n, d = OVERRIDES[rid]
         return h, n, d, d in (0, 3)
-    fs = set(fs_ids(r))
+    fs = set(rule_fs_ids(r))
     outside = sorted(fs - in_scope)
     txt = (r["Definition"] + " " + r["Rule Logic"]).lower()
     sysp = r["System of Publication"].upper()
@@ -138,7 +123,7 @@ def triage(r, in_scope: set[str]):
     if "longitudinal" in obj or PRIOR_YEAR.search(txt):
         return "Year-over-year comparison; needs last year's submitted file or a prior-year snapshot", "Prior-year submission", 1, False
     if outside:
-        return f"Cross-file check with FS{', FS'.join(outside)}, not in scope", "FS" + ", FS".join(outside), 1, False
+        return f"Cross-file check with {', '.join(outside)}, not in scope", ", ".join(outside), 1, False
     if fail in ("Format Error", "File Error") or obj.startswith("format"):
         return "Structural: should hold by construction in the edfacts_file macro and seeds; add a macro unit test", "", 0, True
     if r["Metadata FS"]:
@@ -158,7 +143,7 @@ def triage(r, in_scope: set[str]):
     return "Warehouse test: SQL over the counts produced by edfacts_counts", "", 0, True
 
 
-def rule_label(r, specs):
+def rule_label(r):
     rid = r["EDPass Rule ID"]
     if rid.startswith("Not Enabled"):
         return f"*DMS edit* ({r['Legacy Rule ID'][:40]})"
@@ -166,22 +151,21 @@ def rule_label(r, specs):
 
 
 def files_cell(r, specs):
-    if not fs_ids(r):
+    if not rule_fs_ids(r):
         return md(r["FS"]) if r["FS"] else "*all*"
-    return re.sub(r"\b(\d{3})\b", lambda m: f"[[{specs[m.group(1)]}\\|{m.group(1)}]]" if m.group(1) in specs else m.group(1), re.sub(r"\s+", " ", r["FS"]))
+    return re.sub(r"\b(\d{3})\b", lambda m: f"[[{specs['FS' + m.group(1)]}\\|{m.group(1)}]]" if "FS" + m.group(1) in specs else m.group(1), re.sub(r"\s+", " ", r["FS"]))
 
 
-def main() -> int:
-    specs_by_fs = {k[2:]: v for k, v in spec_notes().items()}  # '052' -> 'FS052 Membership'
-    in_scope = set(specs_by_fs)
-    wb = openpyxl.load_workbook(REF / TARGET_YEAR / BRSI_XLSX, read_only=True)
-    rules = rows(wb, "SY 2025-26")
+def main():
+    specs = spec_notes()  # 'FS052' -> 'FS052 Membership'
+    in_scope = set(specs)
+    rules = brsi_rows(openpyxl.load_workbook(REF / TARGET_YEAR / BRSI_XLSX, read_only=True), "SY 2025-26")
     sha = read_manifest(TARGET_YEAR).get(BRSI_XLSX, {}).get("sha256", "")
 
     groups = collections.OrderedDict((h, []) for h, _ in SECTIONS)
     seen = set()
     for r in sorted(rules, key=lambda r: r["EDPass Rule ID"]):
-        ids = set(fs_ids(r))
+        ids = set(rule_fs_ids(r))
         if ids and not ids & in_scope:
             continue
         for heading, claim in SECTIONS:
@@ -200,7 +184,7 @@ def main() -> int:
             h, n, d, show = triage(r, in_scope)
             counts[d] += 1
             logic = md(r["Rule Logic"]) if show else "_see rules note_"
-            lines.append(f"| {rule_label(r, specs_by_fs)} | {levels(r)} | {files_cell(r, specs_by_fs)} | {md(r['Definition'])} | {logic} | {h} | {n} | {DECISIONS[d]} |")
+            lines.append(f"| {rule_label(r)} | {levels(r)} | {files_cell(r, specs)} | {md(r['Definition'])} | {logic} | {h} | {n} | {DECISIONS[d]} |")
         tallies[heading] = (len(rs), counts)
         body += lines + [""]
 
@@ -279,8 +263,7 @@ def main() -> int:
     ]
     NOTE.write_text("\n".join(out), encoding="utf-8")
     print(f"{total} rules -> {NOTE}; decisions {dict(tot)}")
-    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

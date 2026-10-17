@@ -19,7 +19,6 @@ Needs openpyxl and pymupdf4llm (not in the system Python: `python3 -m venv ~/.ve
 """
 from __future__ import annotations
 
-import argparse
 import collections
 import csv
 import html
@@ -32,7 +31,7 @@ import pymupdf4llm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from convert_specs_to_vault import (  # noqa: E402
-    FILTER_YEAR, FROZEN, REF, ROOT, TARGET_YEAR, fix_bold, parse_title, read_inventory, read_manifest, spec_key,
+    FILTER_YEAR, FROZEN, REF, ROOT, TARGET_YEAR, fix_bold, parse_title, q, read_inventory, read_manifest, spec_key,
 )
 
 OUT = ROOT / "wiki" / "edfacts"
@@ -56,10 +55,6 @@ def spec_notes() -> dict[str, str]:
             name, _, _ = parse_title(r["title"])
             out[key[0]] = f"{key[0]} {name}"
     return out
-
-
-def q(s: str) -> str:
-    return '"' + str(s).replace('"', '\\"') + '"'
 
 
 def frontmatter(fields: dict) -> str:
@@ -251,10 +246,8 @@ def md_cell(s: str) -> str:
     return fix_bold(s)
 
 
-def brsi_rows(path: Path, sheet: str) -> list[dict]:
-    wb = openpyxl.load_workbook(path, read_only=True)
-    ws = wb[sheet]
-    rows = list(ws.iter_rows(values_only=True))
+def brsi_rows(wb, sheet: str) -> list[dict]:
+    rows = list(wb[sheet].iter_rows(values_only=True))
     hdr = [cell(h) for h in rows[0]]
     return [dict(zip(hdr, (cell(c) for c in r))) for r in rows[1:] if any(cell(c) for c in r)]
 
@@ -301,10 +294,9 @@ def rule_table(rules: list[dict], linker: Linker) -> str:
 
 
 def write_brsi(manifest: dict, linker: Linker, specs: dict[str, str]) -> None:
-    path = REF / TARGET_YEAR / BRSI_XLSX
-    rules = brsi_rows(path, "SY 2025-26")
-    discontinued = brsi_rows(path, "Discontinued")
-    wb = openpyxl.load_workbook(path, read_only=True)
+    wb = openpyxl.load_workbook(REF / TARGET_YEAR / BRSI_XLSX, read_only=True)
+    rules = brsi_rows(wb, "SY 2025-26")
+    discontinued = brsi_rows(wb, "Discontinued")
     sha = manifest.get(BRSI_XLSX, {}).get("sha256", "")
     by_fs = collections.defaultdict(list)
     generic = []
@@ -384,10 +376,7 @@ def write_brsi(manifest: dict, linker: Linker, specs: dict[str, str]) -> None:
 # ----------------------------------------------------------------------------- main
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--skip", nargs="*", default=[], choices=["brsi", "workbook", "metadata"])
-    args = ap.parse_args()
+def main():
     manifest = read_manifest(TARGET_YEAR)
     specs = spec_notes()
     guides = metadata_guides(manifest)
@@ -398,53 +387,49 @@ def main() -> int:
             meta_notes.setdefault(fs, g["note"])
     linker = Linker(specs, meta_notes)
 
-    if "metadata" not in args.skip:
-        (OUT / "Metadata").mkdir(parents=True, exist_ok=True)
-        for g in guides:
-            pdf = REF / TARGET_YEAR / g["path"]
-            text = pymupdf4llm.to_markdown(str(pdf))
-            mentioned = sorted({"FS" + x for x in re.findall(r"\bFS\s?(\d{3})\b", text)} & set(specs))
-            fields = {
-                "title": g["note"], "collection": g["collection"], "version": g["version"], "school_year": g["sy"],
-                "metadata_specs": g["fs"], "related_specs": mentioned, "source": g["path"],
-                "sha256": manifest.get(g["path"], {}).get("sha256", ""), "frozen": FROZEN,
-                "tags": ["edfacts", "metadata", "edpass"],
-            }
-            note = pdf_note(pdf, f"{g['collection']} Metadata User Guide ({g['version']}, {g['sy']})", fields, linker, "the EDPass metadata user guide")
-            related = ", ".join(linker.fs(f) for f in mentioned) or "none of the converted specs"
-            glance = (
-                f"> [!abstract] At a glance\n> **Metadata collection:** {g['collection']} {g['version']} ({g['sy']})\n"
-                f"> **Metadata file specs:** {', '.join(g['fs'])}\n> **File specs this guide mentions:** {related}\n"
-                f"> **See also:** [[{INDEX_NOTE}|all specs]], [[BRSI SY 2025-26|business rules]], [[{WORKBOOK_NOTE}|workbook]]\n"
-            )
-            note = note.replace("> [!info] Source", glance + "\n> [!info] Source", 1)
-            (OUT / "Metadata" / f"{g['note']}.md").write_text(note, encoding="utf-8")
-            print(f"metadata: {g['collection']} {g['version']} {g['sy']} -> {len(mentioned)} spec links")
-
-    if "workbook" not in args.skip:
-        (OUT / "Workbook").mkdir(parents=True, exist_ok=True)
-        pdf = REF / TARGET_YEAR / WORKBOOK_PDF
+    (OUT / "Metadata").mkdir(parents=True, exist_ok=True)
+    for g in guides:
+        pdf = REF / TARGET_YEAR / g["path"]
+        text = pymupdf4llm.to_markdown(str(pdf))
+        mentioned = sorted({"FS" + x for x in re.findall(r"\bFS\s?(\d{3})\b", text)} & set(specs))
         fields = {
-            "title": WORKBOOK_NOTE, "school_year": "SY 2025-26", "source": WORKBOOK_PDF,
-            "sha256": manifest.get(WORKBOOK_PDF, {}).get("sha256", ""), "frozen": FROZEN,
-            "tags": ["edfacts", "workbook", "edpass"],
+            "title": g["note"], "collection": g["collection"], "version": g["version"], "school_year": g["sy"],
+            "metadata_specs": g["fs"], "related_specs": mentioned, "source": g["path"],
+            "sha256": manifest.get(g["path"], {}).get("sha256", ""), "frozen": FROZEN,
+            "tags": ["edfacts", "metadata", "edpass"],
         }
-        note = pdf_note(pdf, "EDFacts Workbook with FAQs — SY 2025-26", fields, linker, "the EDFacts Workbook")
+        note = pdf_note(pdf, f"{g['collection']} Metadata User Guide ({g['version']}, {g['sy']})", fields, linker, "the EDPass metadata user guide")
+        related = ", ".join(linker.fs(f) for f in mentioned) or "none of the converted specs"
         glance = (
-            "> [!abstract] At a glance\n> The reference guide for the EDFacts information collection: EDPass roles, the directory "
-            "upload order, each program area's files, metadata and data packages, notification templates, FAQs, standard data "
-            "definitions, the -1 missing-data rule, race/ethnicity guidance, state codes and the glossary.\n"
-            f"> **Newest published:** SY 2025-26 (no SY {TARGET_YEAR} workbook at the {FROZEN} freeze).\n"
-            f"> **See also:** [[{INDEX_NOTE}|all specs]], [[BRSI SY 2025-26|business rules]]\n"
+            f"> [!abstract] At a glance\n> **Metadata collection:** {g['collection']} {g['version']} ({g['sy']})\n"
+            f"> **Metadata file specs:** {', '.join(g['fs'])}\n> **File specs this guide mentions:** {related}\n"
+            f"> **See also:** [[{INDEX_NOTE}|all specs]], [[BRSI SY 2025-26|business rules]], [[{WORKBOOK_NOTE}|workbook]]\n"
         )
         note = note.replace("> [!info] Source", glance + "\n> [!info] Source", 1)
-        (OUT / "Workbook" / f"{WORKBOOK_NOTE}.md").write_text(note, encoding="utf-8")
-        print("workbook: done")
+        (OUT / "Metadata" / f"{g['note']}.md").write_text(note, encoding="utf-8")
+        print(f"metadata: {g['collection']} {g['version']} {g['sy']} -> {len(mentioned)} spec links")
 
-    if "brsi" not in args.skip:
-        write_brsi(manifest, linker, specs)
-    return 0
+    (OUT / "Workbook").mkdir(parents=True, exist_ok=True)
+    pdf = REF / TARGET_YEAR / WORKBOOK_PDF
+    fields = {
+        "title": WORKBOOK_NOTE, "school_year": "SY 2025-26", "source": WORKBOOK_PDF,
+        "sha256": manifest.get(WORKBOOK_PDF, {}).get("sha256", ""), "frozen": FROZEN,
+        "tags": ["edfacts", "workbook", "edpass"],
+    }
+    note = pdf_note(pdf, "EDFacts Workbook with FAQs — SY 2025-26", fields, linker, "the EDFacts Workbook")
+    glance = (
+        "> [!abstract] At a glance\n> The reference guide for the EDFacts information collection: EDPass roles, the directory "
+        "upload order, each program area's files, metadata and data packages, notification templates, FAQs, standard data "
+        "definitions, the -1 missing-data rule, race/ethnicity guidance, state codes and the glossary.\n"
+        f"> **Newest published:** SY 2025-26 (no SY {TARGET_YEAR} workbook at the {FROZEN} freeze).\n"
+        f"> **See also:** [[{INDEX_NOTE}|all specs]], [[BRSI SY 2025-26|business rules]]\n"
+    )
+    note = note.replace("> [!info] Source", glance + "\n> [!info] Source", 1)
+    (OUT / "Workbook" / f"{WORKBOOK_NOTE}.md").write_text(note, encoding="utf-8")
+    print("workbook: done")
+
+    write_brsi(manifest, linker, specs)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

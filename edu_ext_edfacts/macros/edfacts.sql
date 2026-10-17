@@ -45,9 +45,11 @@
   {{ return({'sets': sets, 'cats': cats}) }}
 {% endmacro %}
 
-{#- Count rows for every category set and total, zero-filled over permitted values.
-    exclude_values: {column_name: [codes]} kept out of the zero-fill (e.g. grades the state
-    does not use); a counted row with such a code still comes through. -#}
+{#- Count rows for every category set and total, zero-filled over permitted values. Per set: one
+    GROUP BY over the organization and the set's columns, plus one zero row per organization x
+    permitted-value combination; everything is unioned and summed, so each row carries its set's
+    labels directly. exclude_values: {column_name: [codes]} kept out of the zero-fill (e.g. grades
+    the state does not use); a counted row with such a code still comes through. -#}
 {% macro edfacts_counts(pop, fs, org_level, unit_key='k_student', exclude_values={}) %}
   {%- set org = edu_ext_edfacts.edfacts__org_columns(org_level) -%}
   {%- set meta = edu_ext_edfacts.edfacts__sets(fs, org_level) -%}
@@ -56,42 +58,25 @@
   {%- if not execute -%}select 1 as _parse_only{%- else -%}
   {%- set cats, sets = meta.cats, meta.sets -%}
   {%- set keys = org + cats -%}
-with counted as (
-    select
-        {% for c in keys %}{{ c }},
-        {% endfor -%}
-        {% for c in cats %}grouping({{ c }}) * {{ 2 ** loop.index0 }} + {% endfor %}0 as _mask,
-        count(distinct {{ unit_key }}) as _n
-    from {{ pop }}
-    group by grouping sets (
-        {%- for name, s in sets.items() %}
-        ({{ (org + s.cols) | join(', ') }}){{ ',' if not loop.last }}
-        {%- endfor %}
-    )
-),
-labeled as (
-    select {% for c in keys %}{{ c }}, {% endfor %}
-    {%- for field in ['name', 'order', 'ti'] %}
-        case _mask
-        {%- for name, s in sets.items() -%}
-          {%- set ns = namespace(mask=0) -%}
-          {%- for c in cats %}{% if c not in s.cols %}{% set ns.mask = ns.mask + 2 ** loop.index0 %}{% endif %}{% endfor %}
-            when {{ ns.mask }} then {{ s.order if field == 'order' else "'" ~ (name if field == 'name' else s.ti) ~ "'" }}
-        {%- endfor %}
-        end as {{ {'name': 'category_set', 'order': 'set_order', 'ti': 'total_indicator'}[field] }},
-    {%- endfor %}
-        _n
-    from counted
-),
-orgs as (
+with orgs as (
     select distinct {{ org | join(', ') if org else '1 as _one' }} from {{ pop }}
 ),
-zero_fill as (
+per_set as (
     {%- for name, s in sets.items() %}
+    {%- set labels = "'" ~ name ~ "' as category_set, " ~ s.order ~ " as set_order, '" ~ s.ti ~ "' as total_indicator" %}
+    select
+        {% for c in org %}{{ c }}, {% endfor -%}
+        {% for c in cats %}{{ c if c in s.cols else 'cast(null as varchar)' }} as {{ c }}, {% endfor %}
+        {{ labels }}, count(distinct {{ unit_key }}) as _n
+    from {{ pop }}
+    {%- if org + s.cols %}
+    group by {{ (org + s.cols) | join(', ') }}
+    {%- endif %}
+    union all
     select
         {% for c in org %}orgs.{{ c }}, {% endfor -%}
         {% for c in cats %}{{ 'v_' ~ c ~ '.code' if c in s.cols else 'cast(null as varchar)' }} as {{ c }}, {% endfor %}
-        '{{ name }}' as category_set, {{ s.order }} as set_order, '{{ s.ti }}' as total_indicator, 0 as _n
+        {{ labels }}, 0 as _n
     from orgs
     {%- for c in s.cols %}
     cross join (
@@ -106,11 +91,7 @@ zero_fill as (
 select
     {% for c in keys %}{{ c }}, {% endfor %}category_set, set_order, total_indicator,
     cast(sum(_n) as bigint) as {{ file['count_column'] }}
-from (
-    select * from labeled
-    union all
-    select * from zero_fill
-) as unioned
+from per_set
 group by {% for c in keys %}{{ c }}, {% endfor %}category_set, set_order, total_indicator
   {%- endif -%}
 {% endmacro %}

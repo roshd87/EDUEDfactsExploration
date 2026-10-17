@@ -18,9 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SEEDS = ROOT / "edu_ext_edfacts/seeds"
 # ponytail: explicit allowlist; widen per Phase 4 wave once each spec's shape is checked.
 SPECS = ["FS052"]
-LEVELS = ("SEA", "LEA", "School")
-FILE_TYPE_PREFIX = {"SEA": "SEA", "LEA": "LEA", "School": "SCHOOL"}
-LEVEL_ABBR = {"SEA": "SEA", "LEA": "LEA", "School": "SCH"}
+LEVELS = ("SEA", "LEA", "School")  # file types start SEA/LEA/SCHOOL, file names carry SEA/LEA/SCH
 
 
 def norm(value):
@@ -122,10 +120,10 @@ def build_spec(cells, fs):
 
     files, layouts = [], []
     for level in levels:
-        file_type, = [t for t in file_types if t.startswith(FILE_TYPE_PREFIX[level] + " ")]
+        file_type, = [t for t in file_types if t.startswith(level.upper() + " ")]
         files.append({"file_spec_id": fs, "file_spec_version": version, "org_level": level,
                       "file_type": file_type, "table_name": table_name, "file_name_token": token,
-                      "level_abbr": LEVEL_ABBR[level], "reporting_period": period,
+                      "level_abbr": level.upper()[:3], "reporting_period": period,
                       "header_length": header[-1]["start_position"] - 1,
                       "data_length": data[-1]["start_position"] - 1, "count_column": count_column})
         for row in header + data:
