@@ -12,6 +12,11 @@ guide in `wiki/generate/README.md`) — use
 it for business rules the specs leave unstated; its SQL citations point at
 `sources/generate/`.
 
+Start here: `orientation.md` (map of the repo: what is generated, hand-written, or frozen/git-ignored),
+then `HANDOFF.md` (status). Touching a top-level area, a `tasks/` script or the `.planning/` layout
+means editing `orientation.md` in the same change; `python3 tasks/check_docs.py` reports paths these
+docs name that no longer exist.
+
 ## Sources of truth
 
 - **EDFacts file specifications** (SY 2026-27, plus Workbook, BRSI, EDPass metadata guides) are the
@@ -34,6 +39,7 @@ python3 tasks/build_edfacts_seeds.py --year 2026-27   # byte-identical rebuild o
 python3 tasks/convert_specs_to_vault.py                 # wiki/edfacts/: Obsidian notes for the 20 SY 2025-26 Active/Optional specs
 ~/.venvs/edfacts-tools/bin/python tasks/convert_companions_to_vault.py   # + BRSI, Workbook, metadata guides (needs openpyxl, pymupdf4llm)
 python3 tasks/convert_specs_to_vault.py                 # again, so spec notes pick up the companion back-links
+~/.venvs/edfacts-tools/bin/python tasks/build_brsi_review.py            # BRSI rules review sheet (proposed dbt-test handling per rule)
 ```
 
 Then `dbt build` per `edu_ext_edfacts/README.md`. Full rebuild list in `HANDOFF.md`.

@@ -334,6 +334,7 @@ def write_brsi(manifest: dict, linker: Linker, specs: dict[str, str]) -> None:
         f"> **Per-spec notes:** every converted spec has a `<FSnnn> Business Rules` note listing the rules whose FS column names it "
         f"(e.g. [[FS052 Business Rules]]); the table below links them\n"
         f"> **Not yet published:** a SY {TARGET_YEAR} BRSI. At the {FROZEN} freeze the business-rules page still linked the SY 2025-26 inventory, so it is the working baseline.\n"
+        f"> **Review for dbt tests:** [[BRSI Rules Review for dbt Tests]] (proposed handling and pre-set decision per rule)\n"
         f"> **See also:** [[{INDEX_NOTE}|all specs]], [[{WORKBOOK_NOTE}|workbook]]",
         "", source_block(BRSI_XLSX, "the BRSI workbook"),
         "", "## Rules per file specification", "",

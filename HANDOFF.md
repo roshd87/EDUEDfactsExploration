@@ -51,10 +51,12 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 
 ### On deck (vault)
 
-- **Port rules into dbt tests.** `wiki/edfacts/<FSnnn>/<FSnnn> Business Rules.md` now holds every
-  BRSI rule per spec with its logic and error message; the pre-submission rules for FS052, FS039
-  and FS029 are the candidates for `edu_ext_edfacts` tests (start with the 36 cross-file rules in
-  `BRSI SY 2025-26`).
+- **Review the BRSI rules, then port them into dbt tests.** The review sheet is
+  `wiki/edfacts/BRSI/BRSI Rules Review for dbt Tests.md` (315 rules, each with a proposed handling
+  and a pre-set decision; built by `tasks/build_brsi_review.py`) with a live copy that has dropdown
+  decisions at https://claude.ai/code/artifact/0d1fae66-f6a9-49f2-8c08-4875755c4d9a. Decisions
+  made in the Claude Doc are the record; fold them back into `OVERRIDES` in the script so the vault
+  copy matches. Then each "Test now" rule becomes `brsi_<rule id>` in `edu_ext_edfacts`.
 - **Derive `edfacts_config` columns from the metadata notes.** The four guides that apply to the
   converted specs (CCD Grades Offered, CCD Staff FTE and Membership, IDEA Part B Child Count,
   IDEA Part C Child Count) list each SEA policy question verbatim under "Responding to FS5xxx".
@@ -104,4 +106,5 @@ python3 tasks/build_edfacts_seeds.py --year 2026-27  # seeds; then dbt build per
 python3 tasks/convert_specs_to_vault.py              # wiki/edfacts/ Obsidian spec notes (needs pandoc)
 ~/.venvs/edfacts-tools/bin/python tasks/convert_companions_to_vault.py  # BRSI/Workbook/metadata notes (venv: pip install openpyxl pymupdf4llm)
 python3 tasks/convert_specs_to_vault.py              # again: spec notes read the companion notes for back-links
+~/.venvs/edfacts-tools/bin/python tasks/build_brsi_review.py            # wiki/edfacts/BRSI/BRSI Rules Review for dbt Tests.md
 ```
