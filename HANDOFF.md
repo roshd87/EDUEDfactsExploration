@@ -1,7 +1,7 @@
 # Handoff — EDUEDfacts
 
-Updated 2026-10-15 (vault spec + companion notes). Read this first, then `EDFactsOutputPlan.md` (the plan) and
-`CLAUDE.md` (operating guide).
+Updated 2026-10-17 (orientation map, docs checker, BRSI review sheet). Read `orientation.md` (repo map) and this file first,
+then `EDFactsOutputPlan.md` (the plan) and `CLAUDE.md` (operating guide).
 
 ## What this repo is now
 
@@ -25,6 +25,8 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
 | Vault spec notes | 20 specs (18 Active + FS224/FS225 Optional in SY 2025-26) converted from the SY 2026-27 DOCX into Obsidian notes: frontmatter, at-a-glance callout, pipe tables, Generate-domain links, index note. Deterministic rebuild | `wiki/edfacts/<FSnnn>/`, `wiki/edfacts/EDFacts Specs.md`, `tasks/convert_specs_to_vault.py` |
 | Vault companion notes | BRSI SY 2025-26 v1.04 (1173 rules; overview + a `<FSnnn> Business Rules` note per spec), Workbook SY 2025-26, and the newest guide for each of the 13 EDPass metadata collections, all cross-linked to the spec notes (FS mentions become wikilinks). No SY 2026-27 BRSI or Workbook existed at the freeze | `wiki/edfacts/{BRSI,Workbook,Metadata}/`, `tasks/convert_companions_to_vault.py` |
 | Synopsis page | One-page summary of the three analyses above | `wiki/analysis/EDFacts-2026-27-Findings.html`, published privately at https://claude.ai/artifact/2fVMftrtHYoBwWqYkaRVLa |
+| BRSI rules review sheet | 315 rules with a proposed dbt-test handling and pre-set decision each (202 test now, 92 later, 12 not SQL, 9 n/a); linked from the BRSI note and the spec index. Decisions live in a Claude Doc (see On deck) | `wiki/edfacts/BRSI/BRSI Rules Review for dbt Tests.md`, `tasks/build_brsi_review.py` |
+| Agent orientation | `orientation.md` maps the repo (generated vs hand-written vs frozen, pipelines, traps); `tasks/check_docs.py` reports paths the orientation docs name that are not on disk, plus missing venvs and frozen docs. Evaluated and rejected skills for refreshing/onboarding: a CLAUDE.md pointer plus the script covers it | `orientation.md`, `tasks/check_docs.py`, `docs/agents/issue-tracker.md` (now matches the real `.planning/` layout) |
 
 ## Next steps
 
@@ -92,6 +94,8 @@ GROUPING SETS count macro, and a fixed-width record macro. CEDS Generate is a re
   managed, so PDF/XLSX libraries live in `~/.venvs/edfacts-tools`; pandoc emits HTML tables for
   any DOCX table with multi-paragraph cells, which the spec converter flattens to pipe tables;
   Obsidian needs `\|` for the alias pipe of a wikilink inside a table cell.
+- **Companion picker in `convert_specs_to_vault.py` globs `BRSI SY *.md`** for the inventory note; the
+  review sheet shares the folder and sorts first, which once swapped the index link (fixed 2026-10-17).
 - **Vault rebuild order matters:** specs → companions → specs. The spec notes read the companion
   notes' frontmatter for back-links; the companions read the spec catalog for link targets.
 
