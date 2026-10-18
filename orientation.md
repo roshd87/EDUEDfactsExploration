@@ -27,7 +27,7 @@ Obsidian vault of the specs). Split out of GenerateExplorer on 2026-10-12; that 
 | `wiki/reference/edfacts/<year>/` | Frozen federal specs, BRSI, Workbook, metadata guides + `MANIFEST.csv` (SHA-256). **Git-ignored except manifest/README; never hand-edit** | Frozen |
 | `wiki/reference/ed-fi/6.1.0/` | Pinned Ed-Fi schemas and descriptors (tarball git-ignored) | Frozen |
 | `wiki/edfacts/` | Obsidian notes: one folder per Active/Optional spec (20), `BRSI/`, `Workbook/`, `Metadata/`, index `EDFacts Specs.md` | **Generated** by the two `convert_*_to_vault.py` scripts; edit the converters |
-| `wiki/analysis/` | Delta note, shared-fields note + CSV, gap analysis, published HTML synopses | Yes |
+| `wiki/analysis/` | Delta note, shared-fields note + CSV, gap analysis, SC child count vs FS002 comparison, published HTML synopses | Yes |
 | `wiki/generate/` | Read-only wiki of how CEDS Generate works (domains, components, repo oddities). Reading guide in its `README.md` | Yes, frozen reading source |
 | `sources/generate/` | 515 Generate SQL files at commit `37108eb`; wiki citations resolve here. Git-ignored | Frozen |
 | `sources/edfi/` | Ed-Fi DS 5.2.0 swagger | Frozen |
