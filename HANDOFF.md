@@ -1,6 +1,6 @@
 # Handoff — EDUEDfacts
 
-Updated 2026-10-17 (orientation map, docs checker, BRSI review sheet, lean-up after the over-engineering audit). Read `orientation.md` (repo map) and this file first,
+Updated 2026-10-21 (vault at-a-glance Levels fix after the Slite EdFacts File Guide review). Read `orientation.md` (repo map) and this file first,
 then `EDFactsOutputPlan.md` (the plan) and `CLAUDE.md` (operating guide).
 
 ## What this repo is now
@@ -28,6 +28,7 @@ count macro (one GROUP BY per category set, unioned), and a fixed-width record m
 | BRSI rules review sheet | 315 rules with a proposed dbt-test handling and pre-set decision each (202 test now, 92 later, 12 not SQL, 9 n/a); linked from the BRSI note and the spec index. Decisions live in a Claude Doc (see On deck) | `wiki/edfacts/BRSI/BRSI Rules Review for dbt Tests.md`, `tasks/build_brsi_review.py` |
 | Agent orientation | `orientation.md` maps the repo (generated vs hand-written vs frozen, pipelines, traps); `tasks/check_docs.py` reports paths the orientation docs name that are not on disk, plus missing venvs and frozen docs. Evaluated and rejected skills for refreshing/onboarding: a CLAUDE.md pointer plus the script covers it | `orientation.md`, `tasks/check_docs.py`, `docs/agents/issue-tracker.md` (now matches the real `.planning/` layout) |
 | Lean-up (over-engineering audit, 2026-10-17) | Dead driver, flags and duplicate helpers removed from the task scripts; `edfacts_counts` rewritten as one GROUP BY per set (same rows, 21/21 tests); GSD `config.json`, the two template agent docs and the SY 2025-26 `federal-normalized-*` lineage CSVs deleted (git history keeps them); every generated output rebuilt byte-identical | `tasks/`, `edu_ext_edfacts/` |
+| Slite "EdFacts File Guide" review (2026-10-21) | Compared Kayla Bollinger's AI-generated guide (Slite, Minnesota collection, 18 files = this repo's SY 2025-26 Active set) against the vault notes. Guide is right on reporting levels where the vault was wrong: `core_requirements()` in `tasks/convert_specs_to_vault.py` took every column header of the Core Requirements table as a level and read only FS002's SEA/LEA table. Fixed: empty columns dropped, FS002's school table merged, row labels matched case-insensitively; 14 notes changed (FS033/FS129/FS197/FS198/FS207 school only, FS039 LEA+school, FS089 SEA+LEA, FS002 adds school, FS224 SEA, FS225 LEA, Part C notes gain Type of count and Zero counts). Guide errors queued as feedback: FS039 NOGRADES is never used for operational schools; SY label; dead index links | `tasks/convert_specs_to_vault.py`, `wiki/edfacts/` |
 | SC child count vs FS002 (2026-10-17) | Read `edanalytics/edu_ext_sc` (`rpt_sedm__child_count`, commit `eda7cb9`) and `edanalytics/stadium_south_carolina` (`adf53db`) SEDM code against the FS002 spec, BRSI and Generate notes. The SC report is a student-level IEP list with an IDEA flag, not counts: no age, kindergarten, enrollment-on-date or dedup logic; three likely SQL defects (exclusive IEP end date, inner joins to the two seeds, EL dedup on a null key). 16 follow-up questions, no row counts run | `wiki/analysis/SC-Child-Count-vs-FS002.md` |
 
 ## Next steps

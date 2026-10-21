@@ -19,8 +19,10 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS002 at a glance
 > **Data groups:** DG74
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA
-> **Reporting Period:** Child Count Date – The date designated by the state that is between October 1 and December 1 for the IDEA child count
+> **Levels:** SEA, LEA, School
+> **Reporting Period:** Child Count Date - The date designated by the state that is between October 1 and December 1 for the IDEA child count
+> **Type of count:** SEA: Once (unduplicated count); LEA: At only one LEA (unduplicated count across LEAs); School: At only one school
+> **Zero counts:** SEA: Required for all valid combinations; see Zero Exceptions or Not Applicable as explained below; LEA: Required for the total of the education unit. Not required for category sets or subtotal; School: Required for the total of the education unit. Not required for category sets or subtotals
 > **Categories:** Educational Environment (IDEA) SA, Disability Category (IDEA), Sex (Membership), Age (School Age), Racial Ethnic, English Learner Status (Both)
 > **Data record:** 25 fields, 505 characters fixed-width
 > **Generate domain:** [[ChildCount]]

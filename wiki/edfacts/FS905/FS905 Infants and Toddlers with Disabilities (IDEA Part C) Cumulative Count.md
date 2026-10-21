@@ -20,7 +20,9 @@ tags: [edfacts, spec, sy2026-27]
 > **Data groups:** DG5026
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
 > **Levels:** State
-> **Reporting Period:** Cumulative Count (IDEA Part C) - The period for the cumulative count for IDEA Part C which is the most recent 12-month period for which data are available.
+> **Reporting Period:** Cumulative Count (IDEA Part C) - The period for the cumulative count for IDEA Part C which is the most recent 12-month period for which data are available
+> **Type of count:** Once
+> **Zero counts:** Required
 > **Data record:** 13 fields, 325 characters fixed-width
 > **Business rules:** [[FS905 Business Rules]] (BRSI SY 2025-26)
 > **Metadata guides:** [[IDEA Part C Child Count Metadata User Guide]]

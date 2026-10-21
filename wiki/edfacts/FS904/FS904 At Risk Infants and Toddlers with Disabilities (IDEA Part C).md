@@ -21,6 +21,8 @@ tags: [edfacts, spec, sy2026-27]
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
 > **Levels:** State
 > **Reporting Period:** Child Count Date
+> **Type of count:** Once
+> **Zero counts:** Required
 > **Data record:** 13 fields, 325 characters fixed-width
 > **Business rules:** [[FS904 Business Rules]] (BRSI SY 2025-26)
 > **Metadata guides:** [[IDEA Part C Child Count Metadata User Guide]]

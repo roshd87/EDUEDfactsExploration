@@ -19,7 +19,7 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS039 at a glance
 > **Data groups:** DG18
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA, School
+> **Levels:** LEA, School
 > **Reporting Period:** Oct 1 - October 1 or the closest school day
 > **Categories:** Grades Offered
 > **Data record:** 10 fields, 283 characters fixed-width

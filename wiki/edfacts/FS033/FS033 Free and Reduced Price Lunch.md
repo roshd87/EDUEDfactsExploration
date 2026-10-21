@@ -19,10 +19,10 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS033 at a glance
 > **Data groups:** DG565, DG813
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA, School
+> **Levels:** School
 > **Reporting Period:** October 1 (or closest school day) or USDA reporting period
-> **Type of count:** Students are counted at only one school.
-> **Zero counts:** Either DG 565 or DG 813 are required. Both can be submitted.
+> **Type of count:** Students are counted at only one school
+> **Zero counts:** Either DG 565 or DG 813 are required. Both can be submitted
 > **Categories:** Lunch Program Status
 > **Data record:** 11 fields, 295 characters fixed-width
 > **Generate domain:** [[Membership]]

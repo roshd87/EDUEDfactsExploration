@@ -108,7 +108,7 @@ Related: [[FS002 Children with Disabilities (IDEA) School Age|FS002 spec]] · [[
 - Generate does not enforce one-LEA unduplication (FS002 Table 2.2-1).
 - Generate maps absent EL status to NLEP. FS002 has a MISSING option; treating absent as NLEP is an assumption to confirm.
 - `ChildCount.md` says FS002 is ages 6-21, but the SQL allows 5.
-- The vault at-a-glance lists Levels as SEA and LEA; the spec also defines school level.
+- The vault at-a-glance listed Levels as SEA and LEA although the spec also defines school level. Fixed 2026-10-21: the converter now merges FS002's two requirement tables and drops level columns the spec leaves empty.
 - Frontmatter says `status_2026_27` is Inactive (frozen 2026-10-07) and Active for SY 2025-26. The spec is v23.0 for SY 2026-27; the delta note says changes are punctuation-level only.
 - The Metadata guide in the vault is the SY 2025-26 edition, so the 2026-27 FS5002 and FS5003 values are not in the vault.
 - BRSI SY 2025-26 v1.04 marks IDEA-0011 "Changed: Updated threshold" and IDEA-0231 "New". No SY 2026-27 BRSI was available at the freeze.

@@ -22,7 +22,7 @@ tags: [edfacts, spec, sy2026-27]
 > **Levels:** SEA, LEA, School
 > **Reporting Period:** Oct 1 - October 1 or the closest school day
 > **Type of count:** SEA: Once; headcount, not a full-time equivalency (FTE); LEA: At only one LEA; headcount, not a full-time equivalency (FTE); School: At only one school; headcount, not a full-time equivalency (FTE)
-> **Zero counts:** Required, except as noted below.
+> **Zero counts:** Required, except as noted below
 > **Categories:** Grade Level (Membership), Sex (Membership), Racial Ethnic
 > **Data record:** 13 fields, 325 characters fixed-width
 > **Generate domain:** [[Membership]]

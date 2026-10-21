@@ -19,7 +19,7 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS198 at a glance
 > **Data groups:** DG830, DG831, DG832
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA, School
+> **Levels:** School
 > **Reporting Period:** School Year (state) - Any 12-month period defined by the state. The state determines whether summer is included in the preceding or following school year
 > **Data record:** 10 fields, 289 characters fixed-width
 > **Generate domain:** [[Directory]]

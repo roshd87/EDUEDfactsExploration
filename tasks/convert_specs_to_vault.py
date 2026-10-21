@@ -337,12 +337,25 @@ def first_table_after(body: str, heading_re: str) -> list[list[str]]:
     return [r for r in rows if not all(set(c) <= {"-"} for c in r)]
 
 
-def core_requirements(body: str) -> tuple[list[str], dict[str, list[str]]]:
-    rows = first_table_after(body, r"(Core )?Requirements for Submitting")
-    if not rows or len(rows[0]) < 2:
-        return [], {}
-    levels = [h.strip("* ") for h in rows[0][1:]]
-    data = {r[0].strip("* "): [c for c in r[1:]] for r in rows[1:] if r[0].strip()}
+def core_requirements(body: str) -> tuple[list[str], dict[str, dict[str, str]]]:
+    """Levels with at least one filled cell, merged across every 'Requirements for Submitting' table
+    (FS002 keeps its school level in a second table); rows keyed by lower-cased label."""
+    heading = r"(Core )?Requirements for Submitting"
+    levels: list[str] = []
+    data: dict[str, dict[str, str]] = {}
+    for m in re.finditer(rf"^##+\s+{heading}.*?$", body, re.M):
+        rows = first_table_after(body[m.start():], heading)
+        if not rows or len(rows[0]) < 2:
+            continue
+        body_rows = [r for r in rows[1:] if r[0].strip()]
+        for i, lv in enumerate(h.strip("* ") for h in rows[0][1:]):
+            cells = {r[0].strip("* ").lower(): (r[i + 1] if i + 1 < len(r) else "") for r in body_rows}
+            if not any(v.strip() for v in cells.values()):
+                continue  # the spec's table has the column, but the file has no such level
+            if lv not in levels:
+                levels.append(lv)
+            for label, v in cells.items():
+                data.setdefault(label, {})[lv] = v
     return levels, data
 
 
@@ -393,7 +406,8 @@ def at_a_glance(body: str, meta: dict) -> str:
         lines.append(f"> **Levels:** {', '.join(levels)}")
         # ponytail: only the rows that change how a file is built; the full table sits two screens down.
         for label in ("Reporting Period", "Type of count", "Zero counts", "Zero count reporting"):
-            vals = [re.sub(r"(<br>)+", " ", v).strip() for v in core.get(label, [])]
+            # ponytail: en-dash and trailing-period drift between a spec's SEA/LEA and school tables is not a difference
+            vals = [re.sub(r"(<br>)+", " ", core.get(label.lower(), {}).get(lv, "")).replace("–", "-").strip().rstrip(".") for lv in levels]
             uniq = [v for i, v in enumerate(vals) if v and v not in vals[:i]]
             if not uniq:
                 continue

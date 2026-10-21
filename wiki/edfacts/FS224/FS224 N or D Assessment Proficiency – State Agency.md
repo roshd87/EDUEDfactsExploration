@@ -19,10 +19,10 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS224 at a glance
 > **Data groups:** DG868
 > **EDPass status:** Optional in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA, School
+> **Levels:** SEA
 > **Reporting Period:** Testing Window - The period when the state administers state-wide academic assessments as described by ESEA
 > **Type of count:** Once per academic subject
-> **Zero counts:** When an academic subject is reported, both values of proficiency status should be reported.
+> **Zero counts:** When an academic subject is reported, both values of proficiency status should be reported
 > **Categories:** Academic Subject (Assessment - no science), Proficiency Status
 > **Data record:** 12 fields, 310 characters fixed-width
 > **Generate domain:** [[Assessments]]

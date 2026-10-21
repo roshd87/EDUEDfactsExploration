@@ -19,7 +19,7 @@ tags: [edfacts, spec, sy2026-27]
 > [!abstract] FS129 at a glance
 > **Data groups:** DG573, DG791, DG803
 > **EDPass status:** Active in SY 2025-26; Inactive in SY 2026-27 at the 2026-10-07 freeze
-> **Levels:** SEA, LEA, School
+> **Levels:** School
 > **Reporting Period:** See section 2.5
 > **Categories:** Shared Time Status, NSLP Status, Virtual School Status
 > **Data record:** 12 fields, 324 characters fixed-width
