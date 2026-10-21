@@ -6,7 +6,7 @@
 > here; the registers are **not recoverable** and must be re-derived if needed.
 
 
-Status: Draft for owner review, 2026-10-07
+Status: Draft for owner review, 2026-10-07; §4a Proposed Plan 1 added 2026-10-21, awaiting decision E6
 Baselines: Generate `37108eb4` (read-only lineage), Ed-Fi Data Standard 6.1.0 (pinned), EDFacts
 SY 2026-27 catalog (frozen 2026-10-07; SY 2025-26 retained as lineage)
 
@@ -194,6 +194,96 @@ its Phase-1 rules are dispositioned.
 **Done when:** one partner produces its Active-set files from its own warehouse and they pass
 EDPass validation.
 
+## 4a. Proposed Plan 1 — Directory precursor, FS039, FS052 (proposed 2026-10-21)
+
+**Status: proposed. Blocked on decision E6 (§5) at start gate G1 (`.planning/ROADMAP.md`).**
+Nothing below is executed until E6 is recorded. Graphic runbook with the per-element evaluation:
+`wiki/analysis/EDFacts-Plan1-FS039-FS052-Runbook.html` (also at
+https://claude.ai/artifact/UmXSAqF6Pq5Dbv4isRctD4).
+
+**Why these two files.** Of the 20 Active/Optional specs, FS039 and FS052 are the only ones whose
+every element is Direct or trivially Derivable in core Ed-Fi *and* already lands in an `edu_wh` or
+`edu_edfi_source` model. Everything else they need is an SEA policy answer, not data. FS029 is not
+a target here but is the precursor: EDPass rejects any LEA or school row without a directory record,
+so Plan 1 builds the directory population once and reuses its unit list in both target files.
+
+### Sequence
+
+| # | Lane | Step | Output |
+|---|---|---|---|
+| A1 | manual | Freeze the SY specs (Chrome fetch + freeze); regenerate the four spec seeds | `edfacts_*` seeds |
+| A2 | manual | Answer FS5017: does the state use Ungraded, Grade 13, Adult Education | `edfacts_config` |
+| A3 | manual | Set the membership count date (Oct 1 or closest school day) | `edfacts_config.member_date` |
+| A4 | manual | State code, abbreviation, agency number 01, submission id, file identifier | dbt vars |
+| A5 | manual | Review the descriptor crosswalks pre-filled from Ed-Fi 6.1 defaults: grade level, sex, race, school type, operational status, LEA category, charter status | `xwalk_edfacts_*` |
+| A6 | manual | Collect the FS029 facts core Ed-Fi lacks: charter authorizer ids, reconstituted status, dated operational-status changes, prior ids | `edfacts_directory_overrides` |
+| B7 | EDPass | SEA directory rolls over; confirm present | — |
+| B8 | Ed-Fi | Read `dim_lea`, `dim_school`, `stg_ef3__*__addresses`, `stg_ef3__*__identification_codes` | — |
+| B9 | build | FS029 LEA directory population and file | `ssLEADIRECTORYv.txt` |
+| B10 | EDPass | Upload LEA directory (supervisory unions first) | — |
+| B11 | manual | FS190 charter authorizer roster, by hand, only if any school is a charter | FS190 file |
+| B12 | build | FS029 school directory population and file | `ssSCHDIRECTORYv.txt` |
+| B13 | EDPass | Upload school directory; download the Directory and Grades Offered report and reconcile the unit list | — |
+| C14 | Ed-Fi | Read `stg_ef3__schools__grade_levels` + `dim_school` + `dim_lea` | — |
+| C15 | build | Grades-offered population: operational units, not reportable programs, grades through the xwalk minus unused UG/13/AE; LEA = union of its schools else `NOGRADES` | one row per unit per grade |
+| C16 | build | `edfacts_file` + spec tests + `brsi_*` tests | `ssLEAGRADESOFFv.txt`, `ssSCHGRADESOFFv.txt` |
+| C17 | EDPass | Upload FS039; type FS5017 (separate submission since SY 2025-26) | — |
+| D18 | Ed-Fi | Read `fct_student_school_association` + `dim_student` | — |
+| D19 | build | Membership population: entry ≤ count date < exit (inclusivity per `edu:enroll:exit_withdraw_date_inclusive`); one school per student via `is_primary_school` then latest entry; grade from the counted enrollment's `entry_grade_level`; units from B12 minus `NOGRADES` | population model |
+| D20 | build | `edfacts_counts`: Category Set A, subtotals 1–4, unit total; zero-fill only grades the unit reported in FS039 | counts |
+| D21 | build | `edfacts_file` + `edfacts_conforms`, `edfacts_sets_sum_to_total`, `edfacts_record_lengths`, FS052 `brsi_*`, cross-file FS039→FS052 grade check | `ssSEAMEMBERv.txt`, `ssLEAMEMBERv.txt`, `ssSCHMEMBERv.txt` |
+| D22 | manual | FS5024 narrative answers (grades offered vs enrolled, PK contents, level differences) | EDPass text |
+| D23 | EDPass | Enter FS5024, upload FS052, submit as one package; resolve rule errors (45–60 min processing) | submission |
+
+### Completeness against the current EDU structure (evaluated 2026-10-21)
+
+Graded against the model SQL on `main` of `edanalytics/edu_wh` and `edanalytics/edu_edfi_source`
+and the Ed-Fi 6.1 default descriptors in `wiki/reference/ed-fi/6.1.0/Descriptors/`. 40 element
+groups across the four files:
+
+| Status | Count | Meaning |
+|---|---:|---|
+| Ready | 20 | column exists with the right meaning |
+| Crosswalk | 10 | column exists; only a descriptor→permitted-value seed is missing |
+| Build gap | 5 | small warehouse or extension addition |
+| Manual | 5 | no core Ed-Fi source; overrides seed or typed into EDPass |
+
+- **FS039 and FS052 need no `edu_wh` change.** Grade levels are in `stg_ef3__schools__grade_levels`
+  at the file's grain (not on `dim_school`); `bld_ef3__stu_race_ethnicity` already applies the
+  federal Hispanic-first, then two-or-more rule with the three sentinel codes as project vars.
+- **Ed-Fi 6.1 defaults carry the EDFacts vocabulary.** `SchoolType` includes "Reportable Program",
+  `OperationalStatus` has the same eight values as DG16/DG531 (Active = Open), and
+  `LocalEducationAgencyCategory` names the nine DG453 types verbatim. Those xwalks are near 1:1.
+- **Crosswalk decisions (10):** LEA type, LEA and school operational status, charter LEA status
+  DG653, school type, school charter YES/NO, grades offered (settle Preschool, Early Education,
+  Transitional Kindergarten; drop Infant/toddler and postsecondary levels), membership grade, sex
+  (Ed-Fi Non-binary and Not Selected have no FS052 value beyond MISSING), race.
+- **Build gaps (5):** institution telephones are in `base_ef3__*.v_institution_telephones` but no
+  staging model flattens them and telephone is mandatory in both FS029 files (one `json_flatten`
+  model in `edu_edfi_source`); "opened after the count date" has no Ed-Fi date (proxy from
+  enrollment/calendar or the overrides seed); the FS052 macro must zero-fill only the FS039 grade
+  set per unit; `-1` missing counts are not implemented.
+- **Manual (5), all in FS029:** charter authorizer ids (DG804, `charter_approval_agency` is a
+  type, not an organization), reconstituted status DG743, dated operational-status changes
+  (DG16N/DG531N + DG571) for LEA and school, prior state ids. The dated-status items and the
+  "opened after count date" gap are the subject of decision E7; see
+  `wiki/analysis/Status-and-Year-Change-Tracking.md` for the rules (DG16 is a transition against
+  the prior filing; N fields are one net change) and the ranked designs.
+- **Two warehouse behaviours to design around:** org staging dedupes to the latest API year, so a
+  rerun for a prior year reports today's operational status; `dim_student` carries the latest grade
+  of the year, so Membership takes grade from the enrollment it counts.
+
+### Deliverables if E6 accepts
+
+1. Seeds: `xwalk_edfacts_{grade_level,sex,race,school_type,operational_status,lea_category,charter_status}`
+   pre-filled from Ed-Fi 6.1 defaults; `edfacts_directory_overrides`; `edfacts_config` columns
+   `member_date`, `uses_ungraded`, `uses_grade_13`, `uses_adult_ed`.
+2. `edu_edfi_source`: `stg_ef3__schools__institution_telephones` and the LEA twin (upstream PR).
+3. `edu_ext_edfacts`: directory population + FS029 LEA/school files; FS039 population + files;
+   FS052 population over `fct_student_school_association`, FS039 grade gate in `edfacts_counts`,
+   `-1` rule; `SPECS` allowlist widened to FS029, FS039, FS052; `brsi_*` tests for the three.
+4. Validation on the Grand Bend sample ODS (E2 default), then one partner.
+
 ## 5. Decisions needed from the owner
 
 | # | Decision | Default if silent |
@@ -203,6 +293,8 @@ EDPass validation.
 | E3 | Where non-Ed-Fi inputs (staff certification, org governance, finance, SEA policy answers) enter | seeds for SEA-level answers; earthmover bundles for anything per-staff or per-org |
 | E4 | ~~Baseline: wait for SY 2026-27 artifacts~~ resolved: SY 2026-27 frozen 2026-10-07 | — |
 | E5 | Fate of the P0 register waves (Phases 4+ of the old plan: 4,731 unadjudicated rows) | stop; spec seeds replace them. Registers deleted 2026-10-12 |
+| E6 | **Start gate G1.** Adopt, amend or reject Proposed Plan 1 (§4a): FS029 precursor → FS039 → FS052 as the first slice, with its five build gaps and five manual inputs accepted as scope | **No default.** Phase 07 (vertical slices) does not start until this is recorded here and in `HANDOFF.md` |
+| E7 | **Status and year-change tracking approach** for FS029 DG16/DG16N/DG571 and other as-of-date needs. Fifteen candidate designs ranked in `wiki/analysis/Status-and-Year-Change-Tracking.md`; recommendation there is solution 2 (filing ledger + declarations) plus solution 7 (by-year org builds), with solution 9 deferred. Decide with E6; the choice changes Plan 1's manual items and the "opened after count date" gap | **No default.** Same gate as E6 |
 
 ## 6. Out of scope
 

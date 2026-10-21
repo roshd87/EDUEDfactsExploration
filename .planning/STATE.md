@@ -4,7 +4,7 @@ milestone_name: edfacts-from-edfi
 current_phase: 06
 current_phase_name: spec-seeds-and-macros
 status: executing
-last_updated: "2026-10-12"
+last_updated: "2026-10-21"
 ---
 
 # Project State
@@ -23,9 +23,15 @@ See `.planning/PROJECT.md` and `EDFactsOutputPlan.md`.
 - Synopsis published: `wiki/analysis/EDFacts-2026-27-Findings.html`.
 - Phase 06 (spec seeds + macros): **in progress**. FS052 renders from seeds alone in `edu_ext_edfacts/`
   (2026-10-09); remaining: widen spec allowlist, `edfacts_config`, `xwalk_edfacts_*`. See `HANDOFF.md`.
+- Proposed Plan 1 (2026-10-21): FS029 precursor → FS039 → FS052 sequence plus a 40-element completeness
+  evaluation against current `edu_wh`/`edu_edfi_source` (20 ready / 10 crosswalk / 5 build gap / 5 manual).
+  `EDFactsOutputPlan.md` §4a; runbook `wiki/analysis/EDFacts-Plan1-FS039-FS052-Runbook.html`. **Gate G1 open.**
 
 ## Blockers
 
+- **Start gate G1 / decisions E6 and E7:** Proposed Plan 1 (`EDFactsOutputPlan.md` §4a) and the status
+  and year-change tracking approach (`wiki/analysis/Status-and-Year-Change-Tracking.md`) must both be
+  decided before Phase 07 starts. No defaults.
 - Owner decisions E1–E3 (`EDFactsOutputPlan.md` §5); defaults apply until overridden. E5 settled.
 
 ## History

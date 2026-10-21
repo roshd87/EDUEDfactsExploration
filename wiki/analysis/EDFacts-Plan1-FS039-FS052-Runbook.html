@@ -1,0 +1,479 @@
+<title>Membership and Grades Offered Runbook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one overview flow, a four-lane swimlane (lanes = who does the step, rows = order), then a per-element completeness table. */
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --fg:#1d2126; --muted:#5d6670; --rule:#d9d6cd;
+  --manual:#9a5b12; --manual-soft:#fbead2;
+  --wh:#0f6e73; --wh-soft:#d6eeee;
+  --build:#3d4ea3; --build-soft:#dde1f5;
+  --edpass:#2f6b3a; --edpass-soft:#d9ead9;
+  --ok:#2f6b3a; --ok-soft:#d9ead9;
+  --xw:#3d4ea3; --xw-soft:#dde1f5;
+  --gap:#9a5b12; --gap-soft:#fbead2;
+  --man:#8a2f2f; --man-soft:#f6dcdc;
+  --accent:#3d4ea3;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15181c; --surface:#1e2228; --fg:#e8e6df; --muted:#a0a7ae; --rule:#363c44;
+  --manual:#e9a757; --manual-soft:#3a2a12;
+  --wh:#5fc3c7; --wh-soft:#0f3335;
+  --build:#9aa8ee; --build-soft:#242b4d;
+  --edpass:#7fc48a; --edpass-soft:#1b331f;
+  --ok:#7fc48a; --ok-soft:#1b331f;
+  --xw:#9aa8ee; --xw-soft:#242b4d;
+  --gap:#e9a757; --gap-soft:#3a2a12;
+  --man:#e58a8a; --man-soft:#3d1f1f;
+  --accent:#9aa8ee; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15181c; --surface:#1e2228; --fg:#e8e6df; --muted:#a0a7ae; --rule:#363c44;
+  --manual:#e9a757; --manual-soft:#3a2a12;
+  --wh:#5fc3c7; --wh-soft:#0f3335;
+  --build:#9aa8ee; --build-soft:#242b4d;
+  --edpass:#7fc48a; --edpass-soft:#1b331f;
+  --ok:#7fc48a; --ok-soft:#1b331f;
+  --xw:#9aa8ee; --xw-soft:#242b4d;
+  --gap:#e9a757; --gap-soft:#3a2a12;
+  --man:#e58a8a; --man-soft:#3d1f1f;
+  --accent:#9aa8ee; color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+main{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.1}
+h2{font-size:1.35rem;margin-top:48px;margin-bottom:12px}
+h3{font-size:1.05rem}
+p{max-width:68ch;margin:0}
+.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+header{display:grid;gap:10px;margin-bottom:28px}
+header p{color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{background:var(--rule);padding:1px 5px;border-radius:3px;white-space:nowrap}
+.lede{color:var(--muted);margin-bottom:14px}
+
+figure{margin:0;border:1px solid var(--rule);background:var(--surface);border-radius:6px;overflow-x:auto}
+figure svg{display:block;max-width:100%;height:auto;min-width:760px;font-family:var(--body)}
+figcaption{padding:10px 14px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--muted)}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 18px;font-size:.82rem}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.l-manual{background:var(--manual)} .l-wh{background:var(--wh)} .l-build{background:var(--build)} .l-edpass{background:var(--edpass)}
+
+/* swimlane */
+.lanes{display:grid;grid-template-columns:44px repeat(4,minmax(0,1fr));gap:10px 12px}
+.lanes .head{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:6px 0 8px;border-bottom:2px solid var(--rule)}
+.head.manual{color:var(--manual);border-color:var(--manual)}
+.head.wh{color:var(--wh);border-color:var(--wh)}
+.head.build{color:var(--build);border-color:var(--build)}
+.head.edpass{color:var(--edpass);border-color:var(--edpass)}
+.phase{grid-column:1 / -1;margin-top:18px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.phase small{color:var(--muted);font-size:.82rem}
+.n{font-family:var(--mono);font-size:.8rem;color:var(--muted);padding-top:12px;text-align:right;font-variant-numeric:tabular-nums}
+.step{background:var(--surface);border:1px solid var(--rule);border-radius:5px;padding:10px 12px;min-width:0;border-left-width:4px}
+.step.manual{border-left-color:var(--manual);grid-column:2}
+.step.wh{border-left-color:var(--wh);grid-column:3}
+.step.build{border-left-color:var(--build);grid-column:4}
+.step.edpass{border-left-color:var(--edpass);grid-column:5}
+.step.wide2{grid-column:2 / span 2}
+.step.wide34{grid-column:4 / span 2}
+.step b{display:block;font-weight:600;font-size:.95rem;margin-bottom:3px}
+.step p{font-size:.84rem;color:var(--muted)}
+.step ul{margin:6px 0 0;padding-left:16px;font-size:.84rem;color:var(--muted)}
+.step li{margin:2px 0}
+.step .out{margin-top:7px;font-size:.78rem}
+.step .out code{color:var(--fg)}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:3px;vertical-align:middle}
+.tag.manual{background:var(--manual-soft);color:var(--manual)}
+.tag.wh{background:var(--wh-soft);color:var(--wh)}
+.tag.build{background:var(--build-soft);color:var(--build)}
+.tag.edpass{background:var(--edpass-soft);color:var(--edpass)}
+.lane-chip{display:none;margin-bottom:4px}
+
+/* completeness */
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0 18px}
+.score{border:1px solid var(--rule);background:var(--surface);border-radius:5px;padding:10px 12px}
+.score b{font-family:var(--display);font-size:1.6rem;font-weight:600;display:block;line-height:1.1;font-variant-numeric:tabular-nums}
+.score span{font-size:.78rem;color:var(--muted)}
+.score.ok b{color:var(--ok)} .score.xw b{color:var(--xw)} .score.gap b{color:var(--gap)} .score.man b{color:var(--man)}
+.tblwrap{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface);margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.84rem;min-width:720px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--rule)}
+th{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.el{font-weight:500;white-space:nowrap}
+td.src code{white-space:normal}
+td.note{color:var(--muted)}
+.st{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.st.ok{background:var(--ok-soft);color:var(--ok)}
+.st.xw{background:var(--xw-soft);color:var(--xw)}
+.st.gap{background:var(--gap-soft);color:var(--gap)}
+.st.man{background:var(--man-soft);color:var(--man)}
+.filehead{margin-top:22px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.filehead small{color:var(--muted);font-size:.82rem}
+.keylist{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.82rem;color:var(--muted);margin-top:8px}
+
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.note{border-top:2px solid var(--rule);padding-top:10px;font-size:.88rem}
+.note b{display:block;font-weight:600;margin-bottom:4px}
+.note p{color:var(--muted)}
+
+@media (max-width:760px){
+  .lanes{grid-template-columns:36px minmax(0,1fr)}
+  .lanes .head{display:none}
+  .step.manual,.step.wh,.step.build,.step.edpass,.step.wide2,.step.wide34{grid-column:2}
+  .lane-chip{display:inline-block}
+}
+</style>
+
+<main>
+<header>
+  <span class="eyebrow">EDFacts from Ed-Fi and the EDU warehouse</span>
+  <h1>Producing FS039 Grades Offered and FS052 Membership</h1>
+  <p>The order of work for the two files that core Ed-Fi covers completely: the manual inputs an SEA settles before any SQL runs, the precursor EDPass submissions that must exist before either file is accepted, the warehouse and <code>edu_ext_edfacts</code> build, and the upload. A closing table grades each data element against the current <code>edu_wh</code> and <code>edu_edfi_source</code> models.</p>
+</header>
+
+<figure>
+<svg viewBox="0 0 1120 400" role="img" aria-label="Data flow: SEA manual inputs and the Ed-Fi ODS both feed the edu_ext_edfacts build, which writes the FS029 directory precursor files, then FS039 and FS052; EDPass accepts them in that order, with the two metadata surveys entered by hand.">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker>
+  </defs>
+  <g font-size="12" fill="currentColor" stroke="currentColor" stroke-width="1.2">
+    <rect x="20" y="40" width="200" height="140" rx="4" fill="var(--manual-soft)" stroke="var(--manual)"/>
+    <text x="32" y="62" font-weight="600" stroke="none" fill="var(--manual)">SEA decisions (manual)</text>
+    <text x="32" y="84" stroke="none">count date · Oct 1 or closest day</text>
+    <text x="32" y="102" stroke="none">UG / 13 / AE used in state?</text>
+    <text x="32" y="120" stroke="none">descriptor → permitted value xwalks</text>
+    <text x="32" y="138" stroke="none">state code · abbr · submission id</text>
+    <text x="32" y="156" stroke="none">charter authorizers · reconstituted</text>
+
+    <rect x="20" y="230" width="200" height="130" rx="4" fill="var(--wh-soft)" stroke="var(--wh)"/>
+    <text x="32" y="252" font-weight="600" stroke="none" fill="var(--wh)">Ed-Fi ODS → edu_wh</text>
+    <text x="32" y="274" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">dim_lea · dim_school</text>
+    <text x="32" y="292" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">stg_ef3__schools__grade_levels</text>
+    <text x="32" y="310" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">stg_ef3__*__addresses / _codes</text>
+    <text x="32" y="328" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">dim_student</text>
+    <text x="32" y="346" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">fct_student_school_association</text>
+
+    <rect x="330" y="100" width="250" height="200" rx="4" fill="var(--build-soft)" stroke="var(--build)"/>
+    <text x="342" y="122" font-weight="600" stroke="none" fill="var(--build)">edu_ext_edfacts (dbt)</text>
+    <text x="342" y="144" stroke="none">spec seeds · xwalk seeds · config</text>
+    <line x1="342" y1="156" x2="568" y2="156" stroke="var(--build)" stroke-dasharray="3 3"/>
+    <text x="342" y="178" stroke="none">0  directory population (FS029)</text>
+    <text x="342" y="198" stroke="none">1  grades offered population</text>
+    <text x="342" y="218" stroke="none">2  membership population on date</text>
+    <text x="342" y="238" stroke="none">3  edfacts_counts  (sets + zero-fill)</text>
+    <text x="342" y="258" stroke="none">4  edfacts_file  (header + records)</text>
+    <text x="342" y="278" stroke="none">5  spec tests + BRSI tests</text>
+
+    <rect x="660" y="30" width="190" height="86" rx="4" fill="var(--surface)" stroke="currentColor" stroke-dasharray="4 3"/>
+    <text x="672" y="52" font-weight="600" stroke="none">FS029 precursor files</text>
+    <text x="672" y="72" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssLEADIRECTORYv.txt</text>
+    <text x="672" y="88" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssSCHDIRECTORYv.txt</text>
+    <text x="672" y="106" stroke="none" font-size="11" fill="var(--muted)">+ FS190 by hand if charters</text>
+
+    <rect x="660" y="150" width="190" height="70" rx="4" fill="var(--surface)" stroke="currentColor"/>
+    <text x="672" y="172" font-weight="600" stroke="none">FS039 files</text>
+    <text x="672" y="192" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssLEAGRADESOFFv.txt</text>
+    <text x="672" y="208" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssSCHGRADESOFFv.txt</text>
+
+    <rect x="660" y="270" width="190" height="88" rx="4" fill="var(--surface)" stroke="currentColor"/>
+    <text x="672" y="292" font-weight="600" stroke="none">FS052 files</text>
+    <text x="672" y="312" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssSEAMEMBERv.txt</text>
+    <text x="672" y="328" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssLEAMEMBERv.txt</text>
+    <text x="672" y="344" stroke="none" font-family="IBM Plex Mono,monospace" font-size="11">ssSCHMEMBERv.txt</text>
+
+    <rect x="920" y="20" width="180" height="360" rx="4" fill="var(--edpass-soft)" stroke="var(--edpass)"/>
+    <text x="932" y="42" font-weight="600" stroke="none" fill="var(--edpass)">EDPass, in order</text>
+    <text x="932" y="68" stroke="none">① SEA directory</text>
+    <text x="932" y="84" stroke="none" font-size="11">(rolled over, no action)</text>
+    <text x="932" y="108" stroke="none">② FS029 LEA directory</text>
+    <text x="932" y="132" stroke="none">③ FS190 authorizers</text>
+    <text x="932" y="148" stroke="none" font-size="11">(only if charter schools)</text>
+    <text x="932" y="172" stroke="none">④ FS029 school directory</text>
+    <text x="932" y="196" stroke="none">⑤ FS039 upload</text>
+    <text x="932" y="220" stroke="none">⑥ FS5017 metadata</text>
+    <text x="932" y="236" stroke="none" font-size="11">(entered by hand)</text>
+    <text x="932" y="260" stroke="none">⑦ FS5024 metadata</text>
+    <text x="932" y="276" stroke="none" font-size="11">(entered by hand)</text>
+    <text x="932" y="300" stroke="none">⑧ FS052 + FS5024</text>
+    <text x="932" y="316" stroke="none" font-size="11">submitted as one package</text>
+    <text x="932" y="340" stroke="none">⑨ fix rule errors</text>
+    <text x="932" y="356" stroke="none" font-size="11">45–60 min processing</text>
+
+    <path d="M220 110 L330 150" fill="none" marker-end="url(#arr)"/>
+    <text x="236" y="112" font-size="11" stroke="none" fill="var(--muted)">seeds + vars</text>
+    <path d="M220 290 L330 240" fill="none" marker-end="url(#arr)"/>
+    <text x="238" y="282" font-size="11" stroke="none" fill="var(--muted)">dbt ref()</text>
+    <path d="M580 150 L660 80" fill="none" marker-end="url(#arr)"/>
+    <path d="M580 200 L660 185" fill="none" marker-end="url(#arr)"/>
+    <text x="598" y="182" font-size="11" stroke="none" fill="var(--muted)">writes</text>
+    <path d="M580 250 L660 300" fill="none" marker-end="url(#arr)"/>
+    <path d="M755 116 L755 150" fill="none" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+    <text x="762" y="138" font-size="11" stroke="none" fill="var(--muted)">same unit list</text>
+    <path d="M755 220 L755 270" fill="none" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+    <text x="762" y="250" font-size="11" stroke="none" fill="var(--muted)">grades gate zero-fill</text>
+    <path d="M850 73 L920 104" fill="none" marker-end="url(#arr)"/>
+    <path d="M850 185 L920 192" fill="none" marker-end="url(#arr)"/>
+    <path d="M850 314 L920 300" fill="none" marker-end="url(#arr)"/>
+    <path d="M220 60 C 600 -20, 900 -5, 1010 20" fill="none" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+    <text x="560" y="14" font-size="11" stroke="none" fill="var(--muted)" text-anchor="middle">UG / 13 / AE answers typed into FS5017 · authorizer roster typed into FS190</text>
+  </g>
+</svg>
+<figcaption>Two inputs, one build, three file families, one ordered upload. The directory files are the precursor: EDPass rejects any LEA or school row it has no directory record for. The dashed arrows inside the file column are the cross-file rules: the same unit list runs through all three, and every grade a unit reports in FS039 must get a Membership count in FS052.</figcaption>
+</figure>
+
+<h2>Step sequence</h2>
+<div class="legend">
+  <span><i class="l-manual"></i>Manual, outside Ed-Fi (SEA decides or types)</span>
+  <span><i class="l-wh"></i>Ed-Fi ODS and EDU warehouse</span>
+  <span><i class="l-build"></i>edu_ext_edfacts build</span>
+  <span><i class="l-edpass"></i>EDPass</span>
+</div>
+
+<div class="lanes">
+  <div class="head"></div>
+  <div class="head manual">Manual · outside Ed-Fi</div>
+  <div class="head wh">Ed-Fi + edu_wh</div>
+  <div class="head build">edu_ext_edfacts</div>
+  <div class="head edpass">EDPass</div>
+
+  <div class="phase"><h3>A. Pre-steps, once per school year</h3><small>nothing here is in the ODS</small></div>
+
+  <div class="n">1</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>Freeze the federal specs</b>
+    <p>ed.gov blocks every non-browser client, so a person runs the Chrome-driven fetch, then the freeze script, and regenerates the four spec seeds. Repeat when the files go Active or a revision posts.</p>
+    <div class="out">→ <code>edfacts_category_sets</code> <code>edfacts_layouts</code> <code>edfacts_permitted_values</code> <code>edfacts_files</code></div></div>
+
+  <div class="n">2</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>Answer the three FS5017 policy questions</b>
+    <p>Does the state offer ungraded instruction, Grade 13, Adult Education? These answers drive which grade rows exist in both files and are typed again into EDPass later.</p>
+    <div class="out">→ <code>edfacts_config</code> (today: the <code>exclude_values</code> argument)</div></div>
+
+  <div class="n">3</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>Set the membership count date</b>
+    <p>October 1, or the closest school day when Oct 1 is not one. The same date decides which units are operational for FS039 and FS052.</p>
+    <div class="out">→ <code>edfacts_config.member_date</code></div></div>
+
+  <div class="n">4</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>Set the file identity values</b>
+    <p>FIPS state code, USPS abbreviation, state agency number (01), the seven-character submission id and the free-text file identifier that go in every header.</p>
+    <div class="out">→ dbt vars <code>edfacts_state_code</code> <code>edfacts_state_abbr</code> <code>edfacts_submission_id</code></div></div>
+
+  <div class="n">5</div>
+  <div class="step wide2 manual"><span class="lane-chip tag manual">manual</span><b>Review the descriptor crosswalks</b>
+    <p>Pre-filled from the Ed-Fi 6.1 default descriptors, which already carry the EDFacts vocabulary for most of these. A state with custom descriptors confirms each mapping:</p>
+    <ul>
+      <li>grade level → <code>PK KG 01…12 13 UG AE</code>; decide Preschool, Early Education and Transitional Kindergarten</li>
+      <li>sex → <code>M F</code>; decide what Non-binary and Not Selected become (<code>MISSING</code> is the only other permitted value)</li>
+      <li>race descriptors + Hispanic flag → <code>AM7 AS7 BL7 HI7 PI7 WH7 MU7</code></li>
+      <li>school type → DG21 1–5; the default set includes "Reportable Program"</li>
+      <li>operational status → DG16/DG531 1–8; the default set has the same eight values (Active = Open)</li>
+      <li>LEA category → DG453 1–9; charter status → DG27 YES/NO and DG653</li>
+    </ul>
+    <div class="out">→ <code>xwalk_edfacts_*</code> seeds</div></div>
+
+  <div class="n">6</div>
+  <div class="step wide34 manual"><span class="lane-chip tag manual">manual</span><b>Collect the directory facts Ed-Fi does not hold</b>
+    <p>Three FS029 fields have no core Ed-Fi source and are supplied by hand, usually as a small seed keyed by state school id:</p>
+    <ul>
+      <li>charter authorizer ids (primary, secondary) for every school with charter status YES, and the FS190 roster those ids point at</li>
+      <li>reconstituted status (DG743), defaulting to NO</li>
+      <li>operational status changes after the start of the year, with their effective dates</li>
+    </ul>
+    <div class="out">→ <code>edfacts_directory_overrides</code> seed</div></div>
+
+  <div class="phase"><h3>B. Precursor EDPass submissions</h3><small>the directory must be complete before any other file is accepted</small></div>
+
+  <div class="n">7</div>
+  <div class="step edpass"><span class="lane-chip tag edpass">edpass</span><b>SEA directory</b>
+    <p>Rolled over from the prior year by EDPass. No file, no action. Confirm the SEA record is present before uploading anything.</p></div>
+
+  <div class="n">8</div>
+  <div class="step wh"><span class="lane-chip tag wh">ed-fi</span><b>Read the LEA and school records</b>
+    <p>Names, websites, categories, operational and charter status from the two dims; mailing addresses, NCES identification codes and institution telephones from the staging layer beneath them.</p>
+    <div class="out"><code>dim_lea</code> <code>dim_school</code> <code>stg_ef3__*__addresses</code> <code>stg_ef3__*__identification_codes</code></div></div>
+
+  <div class="n">9</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>FS029 LEA directory</b>
+    <ul>
+      <li>one row per LEA the tenant owns (<code>is_owning_lea</code>), status through the operational xwalk</li>
+      <li>NCES id from the identification codes where the system is NCES; blank is allowed only for New, Future and Added</li>
+      <li>mailing address from the Mailing row, location from Physical; out-of-state flag when the address state differs</li>
+      <li>telephone needs a one-line flatten of <code>v_institution_telephones</code>, which no staging model does today</li>
+    </ul>
+    <div class="out">→ <code>ssLEADIRECTORYvvvvvvv.txt</code> (1005-char records)</div></div>
+
+  <div class="n">10</div>
+  <div class="step edpass"><span class="lane-chip tag edpass">edpass</span><b>Upload the LEA directory</b>
+    <p>Supervisory unions in a first transmittal, subordinate LEAs in a second, if the state has them. An LEA record must exist before any school under it is accepted.</p></div>
+
+  <div class="n">11</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>FS190 charter authorizer roster</b>
+    <p>Only when any school has charter status YES. Core Ed-Fi has no authorizer organization, so this file is assembled by hand from the overrides seed and uploaded before the school directory, which references its ids.</p></div>
+
+  <div class="n">12</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>FS029 school directory</b>
+    <ul>
+      <li>one row per school, same address, id and telephone handling as the LEA file</li>
+      <li>school type through the xwalk; charter status YES unless the descriptor is "Not a Charter School"</li>
+      <li>authorizer ids and reconstituted status joined from the overrides seed</li>
+    </ul>
+    <div class="out">→ <code>ssSCHDIRECTORYvvvvvvv.txt</code> (1081-char records)</div></div>
+
+  <div class="n">13</div>
+  <div class="step edpass"><span class="lane-chip tag edpass">edpass</span><b>Upload the school directory, then confirm</b>
+    <p>After processing, download the Directory and Grades Offered report from EDPass and check that every unit the build will report in FS039 and FS052 is present and operational. Fix directory rejections before going on.</p></div>
+
+  <div class="phase"><h3>C. FS039 Grades Offered</h3><small>build before FS052; Membership is defined against it</small></div>
+
+  <div class="n">14</div>
+  <div class="step wh"><span class="lane-chip tag wh">ed-fi</span><b>Read the school grade spans</b>
+    <p>The school resource's grade level collection, staged one row per school per grade, plus school type and operational status from the dim and the LEA each school belongs to.</p>
+    <div class="out"><code>stg_ef3__schools__grade_levels</code> <code>dim_school</code> <code>dim_lea</code></div></div>
+
+  <div class="n">15</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>Grades offered population</b>
+    <ul>
+      <li>the unit list from step 12: operational on the count date, not a reportable program</li>
+      <li>map each grade through the xwalk; drop UG / 13 / AE rows the state said it does not use</li>
+      <li>LEA rows = the union of its schools' grades; an LEA with none gets one <code>NOGRADES</code> row</li>
+    </ul>
+    <div class="out">→ one row per unit per grade</div></div>
+
+  <div class="n">16</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>Write and test the FS039 files</b>
+    <p><code>edfacts_file</code> emits the header and 283-character fixed-width records. Spec tests check codes and record lengths; the FS039 BRSI rules run as <code>brsi_*</code> tests.</p>
+    <div class="out">→ <code>ssLEAGRADESOFFvvvvvvv.txt</code> <code>ssSCHGRADESOFFvvvvvvv.txt</code></div></div>
+
+  <div class="n">17</div>
+  <div class="step edpass"><span class="lane-chip tag edpass">edpass</span><b>Upload FS039, enter FS5017</b>
+    <p>Upload the LEA file then the school file. Type the three FS5017 answers from step 2 into the CCD Grades Offered metadata page. Since SY 2025-26 they are submitted separately, not as a package.</p></div>
+
+  <div class="phase"><h3>D. FS052 Membership</h3><small>headcount on the count date, one school per student</small></div>
+
+  <div class="n">18</div>
+  <div class="step wh"><span class="lane-chip tag wh">ed-fi</span><b>Read enrollment and demographics</b>
+    <p>Enrollment spans with entry grade and the LEA key, and the student's sex, race/ethnicity and Hispanic flag. All Direct in core Ed-Fi; nothing is derived except the as-of filter.</p>
+    <div class="out"><code>fct_student_school_association</code> <code>dim_student</code></div></div>
+
+  <div class="n">19</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>Membership population on the count date</b>
+    <ul>
+      <li>in membership when entry date ≤ count date and exit date is null or after it (exit-date inclusivity follows the warehouse var)</li>
+      <li>one school per student: <code>is_primary_school</code>, then latest entry on a tie</li>
+      <li>grade from the counted enrollment's <code>entry_grade_level</code>, not the student-year grade on <code>dim_student</code></li>
+      <li>units from step 12 minus any reporting <code>NOGRADES</code>; students outside the unit's grade span go to subtotals 1 and 4 and the total only</li>
+    </ul></div>
+
+  <div class="n">20</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b><code>edfacts_counts</code></b>
+    <p>One GROUP BY per set, unioned: Category Set A (grade × sex × race, indicator N), subtotals 1–4, and the education unit total (indicator Y). Zero-fill only the grades the unit reported in FS039; a unit with no students gets a zero total and no detail rows.</p></div>
+
+  <div class="n">21</div>
+  <div class="step build"><span class="lane-chip tag build">build</span><b>Write and test the FS052 files</b>
+    <p>Header plus 325-character records for SEA, LEA and school. Tests: <code>edfacts_conforms</code>, <code>edfacts_sets_sum_to_total</code>, <code>edfacts_record_lengths</code>, the FS052 BRSI rules, and the cross-file check that every FS039 grade has an FS052 count.</p>
+    <div class="out">→ <code>ssSEAMEMBERvvvvvvv.txt</code> <code>ssLEAMEMBERvvvvvvv.txt</code> <code>ssSCHMEMBERvvvvvvv.txt</code></div></div>
+
+  <div class="n">22</div>
+  <div class="step manual"><span class="lane-chip tag manual">manual</span><b>Write the FS5024 narrative answers</b>
+    <p>Can the state tell grades offered from grades enrolled at school and district level; what the PK count includes (Head Start, IDEA preschool, state pre-K); why school, LEA and SEA totals differ if they do. Free text, 4,000 characters each.</p></div>
+
+  <div class="n">23</div>
+  <div class="step edpass"><span class="lane-chip tag edpass">edpass</span><b>Enter FS5024, upload FS052, submit the package</b>
+    <p>Type the FS5024 answers, upload the three FS052 files, and submit once both show Ready to Submit. Membership and its metadata go as one data package. Processing takes 45 to 60 minutes; resolve any BRSI errors and attach data notes, then resubmit.</p></div>
+</div>
+
+<h2>Completeness against the current EDU structure</h2>
+<p class="lede">Each data element the four files need, graded against the model SQL on the <code>main</code> branches of <code>edu_wh</code> and <code>edu_edfi_source</code> as of 2026-10-21 and the Ed-Fi 6.1 default descriptors. "Ready" means the column exists and carries the right meaning. "Crosswalk" means the column exists and only a seed mapping descriptor values to permitted values is missing. "Build gap" means a small addition to the warehouse or the extension. "Manual" means core Ed-Fi has no source.</p>
+
+<div class="scores">
+  <div class="score ok"><b>20</b><span>ready as-is</span></div>
+  <div class="score xw"><b>10</b><span>need a crosswalk seed</span></div>
+  <div class="score gap"><b>5</b><span>small build gap</span></div>
+  <div class="score man"><b>5</b><span>manual, no Ed-Fi source</span></div>
+</div>
+
+<div class="filehead"><h3>FS029 LEA directory</h3><small>precursor · 16 element groups</small></div>
+<div class="tblwrap"><table>
+<thead><tr><th>Element</th><th>Current EDU source</th><th>Status</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="el">State code, agency number</td><td class="src">dbt vars</td><td><span class="st ok">ready</span></td><td class="note">Constants from step 4.</td></tr>
+<tr><td class="el">LEA identifier (state)</td><td class="src"><code>dim_lea.lea_id</code></td><td><span class="st ok">ready</span></td><td class="note">If the ODS keys LEAs on a local id instead, use <code>bld_ef3__wide_ids_lea</code> with the state id type in <code>xwalk_id_types_ed_org</code>.</td></tr>
+<tr><td class="el">LEA identifier (NCES)</td><td class="src"><code>stg_ef3__local_education_agencies__identification_codes</code> where <code>id_system = 'NCES'</code></td><td><span class="st ok">ready</span></td><td class="note">Depends on the SEA loading NCES codes into the ODS. Blank only for New, Future, Added.</td></tr>
+<tr><td class="el">LEA name</td><td class="src"><code>dim_lea.lea_name</code></td><td><span class="st ok">ready</span></td><td class="note">Truncate to 60.</td></tr>
+<tr><td class="el">LEA type (DG453)</td><td class="src"><code>dim_lea.lea_category</code></td><td><span class="st xw">crosswalk</span></td><td class="note">Ed-Fi 6.1 defaults name the nine DG453 types verbatim, plus legacy "Charter" and "Independent" that need a decision.</td></tr>
+<tr><td class="el">Website</td><td class="src"><code>dim_lea.website</code></td><td><span class="st ok">ready</span></td><td class="note">Optional field.</td></tr>
+<tr><td class="el">Supervisory union id</td><td class="src"><code>dim_lea.parent_lea_id</code></td><td><span class="st ok">ready</span></td><td class="note">Only for states with supervisory unions.</td></tr>
+<tr><td class="el">Telephone</td><td class="src"><code>base_ef3__local_education_agencies.v_institution_telephones</code> (JSON, not flattened)</td><td><span class="st gap">build gap</span></td><td class="note">Mandatory field. No staging model flattens institution telephones; one <code>json_flatten</code> model, mirroring the addresses pattern.</td></tr>
+<tr><td class="el">Mailing address (4 mandatory parts)</td><td class="src"><code>stg_ef3__local_education_agencies__addresses</code> where <code>address_type = 'Mailing'</code></td><td><span class="st ok">ready</span></td><td class="note"><code>dim_lea</code> plucks the Physical row only, so read staging. Street lines 2 and 3 fall out of one street column.</td></tr>
+<tr><td class="el">Location address</td><td class="src"><code>dim_lea.street_address, city, state_code, postal_code</code></td><td><span class="st ok">ready</span></td><td class="note">Optional; the Physical row the dim already chose.</td></tr>
+<tr><td class="el">Out-of-state indicator</td><td class="src">derived: address <code>state_code</code> ≠ SEA state</td><td><span class="st ok">ready</span></td><td class="note">Defaults to NO when blank.</td></tr>
+<tr><td class="el">Operational status at SY start (DG16)</td><td class="src"><code>dim_lea.operational_status</code></td><td><span class="st xw">crosswalk</span></td><td class="note">The eight Ed-Fi defaults match DG16 one to one (Active → 1 Open). Staging keeps the latest-year record, so this is the current status, not a dated one.</td></tr>
+<tr><td class="el">Status change + effective date (DG16N, DG571)</td><td class="src">none</td><td><span class="st man">manual</span></td><td class="note">Ed-Fi stores no status history. Overrides seed, step 6.</td></tr>
+<tr><td class="el">Charter LEA status (DG653)</td><td class="src"><code>dim_lea.charter_status</code></td><td><span class="st xw">crosswalk</span></td><td class="note">The Ed-Fi values are school-shaped (School Charter, Open Enrollment…). NOTCHR/NA are derivable; the charter-LEA sub-codes are a state decision.</td></tr>
+<tr><td class="el">Prior state LEA id</td><td class="src">none</td><td><span class="st man">manual</span></td><td class="note">Only on an id change; normally blank.</td></tr>
+<tr><td class="el">Unit list (which LEAs to report)</td><td class="src"><code>bld_ef3__tenant_lea_ownership.is_owning_lea</code> + operational status</td><td><span class="st ok">ready</span></td><td class="note">Keeps a statewide, multi-tenant warehouse from reporting an LEA twice.</td></tr>
+</tbody></table></div>
+
+<div class="filehead"><h3>FS029 school directory</h3><small>precursor · 11 element groups beyond the LEA rows</small></div>
+<div class="tblwrap"><table>
+<thead><tr><th>Element</th><th>Current EDU source</th><th>Status</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="el">School identifier (state), LEA link</td><td class="src"><code>dim_school.school_id</code>, <code>dim_school.lea_id</code></td><td><span class="st ok">ready</span></td><td class="note">Alternate ids via <code>bld_ef3__wide_ids_school</code> if needed.</td></tr>
+<tr><td class="el">School identifier (NCES)</td><td class="src"><code>stg_ef3__schools__identification_codes</code> where <code>id_system = 'NCES'</code></td><td><span class="st ok">ready</span></td><td class="note">Five digits; same loading caveat as the LEA id.</td></tr>
+<tr><td class="el">School name, website</td><td class="src"><code>dim_school.school_name</code>, <code>dim_school.website</code></td><td><span class="st ok">ready</span></td><td class="note"></td></tr>
+<tr><td class="el">School type (DG21)</td><td class="src"><code>dim_school.school_type</code></td><td><span class="st xw">crosswalk</span></td><td class="note">Defaults: Regular, Special Education, Career and Technical Education, Alternative, Reportable Program. One to one with DG21 1–5.</td></tr>
+<tr><td class="el">Telephone</td><td class="src"><code>base_ef3__schools.v_institution_telephones</code></td><td><span class="st gap">build gap</span></td><td class="note">Same flatten as the LEA telephone.</td></tr>
+<tr><td class="el">Mailing and location addresses, out-of-state</td><td class="src"><code>stg_ef3__schools__addresses</code>, <code>dim_school</code></td><td><span class="st ok">ready</span></td><td class="note">Same handling as the LEA file.</td></tr>
+<tr><td class="el">Operational status (DG531)</td><td class="src"><code>dim_school.operational_status</code></td><td><span class="st xw">crosswalk</span></td><td class="note">Same eight values; same latest-record caveat.</td></tr>
+<tr><td class="el">Status change + effective date</td><td class="src">none</td><td><span class="st man">manual</span></td><td class="note">Overrides seed.</td></tr>
+<tr><td class="el">Charter status (DG27)</td><td class="src"><code>dim_school.charter_status</code></td><td><span class="st xw">crosswalk</span></td><td class="note">YES unless "Not a Charter School"; null needs a decision.</td></tr>
+<tr><td class="el">Charter authorizer ids (DG804 ×2)</td><td class="src">none (<code>charter_approval_agency</code> is a type, not an organization)</td><td><span class="st man">manual</span></td><td class="note">Required when DG27 = YES. Overrides seed plus the hand-built FS190 roster.</td></tr>
+<tr><td class="el">Reconstituted status (DG743)</td><td class="src">none</td><td><span class="st man">manual</span></td><td class="note">Mandatory; default NO in the overrides seed.</td></tr>
+</tbody></table></div>
+
+<div class="filehead"><h3>FS039 Grades Offered</h3><small>target file · 5 element groups</small></div>
+<div class="tblwrap"><table>
+<thead><tr><th>Element</th><th>Current EDU source</th><th>Status</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="el">Grades offered per school (DG18)</td><td class="src"><code>stg_ef3__schools__grade_levels.grade_level</code></td><td><span class="st xw">crosswalk</span></td><td class="note">One row per school per grade, exactly the file's grain, but not surfaced on <code>dim_school</code>. The xwalk must settle Preschool, Early Education and Transitional Kindergarten, and drop Infant/toddler, Postsecondary and the adult-ed levels unless AE is used.</td></tr>
+<tr><td class="el">Unit inclusion (operational, not reportable program)</td><td class="src"><code>dim_school.operational_status</code>, <code>dim_school.school_type</code></td><td><span class="st ok">ready</span></td><td class="note">Reuses the two FS029 crosswalks.</td></tr>
+<tr><td class="el">Units opened after the count date</td><td class="src">none</td><td><span class="st gap">build gap</span></td><td class="note">Ed-Fi has no open date. Proxy: no enrollment and no calendar day on or before the count date; or take it from the overrides seed.</td></tr>
+<tr><td class="el">LEA grades offered</td><td class="src">derived: union of the LEA's schools, else <code>NOGRADES</code></td><td><span class="st ok">ready</span></td><td class="note">Ed-Fi carries grade levels on schools only.</td></tr>
+<tr><td class="el">UG / 13 / AE policy</td><td class="src"><code>edfacts_config</code></td><td><span class="st ok">ready</span></td><td class="note">Step 2; today passed as <code>exclude_values</code>.</td></tr>
+</tbody></table></div>
+
+<div class="filehead"><h3>FS052 Membership</h3><small>target file · 8 element groups</small></div>
+<div class="tblwrap"><table>
+<thead><tr><th>Element</th><th>Current EDU source</th><th>Status</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="el">Enrolled on the count date</td><td class="src"><code>fct_student_school_association.entry_date</code>, <code>exit_withdraw_date</code></td><td><span class="st ok">ready</span></td><td class="note">Exit-date inclusivity follows <code>edu:enroll:exit_withdraw_date_inclusive</code> (default true). No-show withdrawals are already dropped by <code>edu:enroll:exclude_withdraw_codes</code>.</td></tr>
+<tr><td class="el">One school per student</td><td class="src"><code>fct_student_school_association.is_primary_school</code>, <code>is_latest_annual_entry</code></td><td><span class="st ok">ready</span></td><td class="note">Tie-break rule lives in the extension, not the warehouse.</td></tr>
+<tr><td class="el">LEA of the counted enrollment</td><td class="src"><code>fct_student_school_association.k_lea</code></td><td><span class="st ok">ready</span></td><td class="note">Present on the fact since the enrollment-flags refactor; no join through <code>dim_school</code> needed.</td></tr>
+<tr><td class="el">Grade level (membership)</td><td class="src"><code>fct_student_school_association.entry_grade_level</code></td><td><span class="st xw">crosswalk</span></td><td class="note">Use the counted enrollment's grade, not <code>dim_student.grade_level</code>, which is the latest enrollment of the year. Same grade xwalk as FS039.</td></tr>
+<tr><td class="el">Sex (membership)</td><td class="src"><code>dim_student.gender</code></td><td><span class="st xw">crosswalk</span></td><td class="note">Ed-Fi defaults add Non-binary and Not Selected; the file permits only M, F and MISSING. Policy decision in the xwalk.</td></tr>
+<tr><td class="el">Racial ethnic (7 codes)</td><td class="src"><code>dim_student.race_ethnicity</code>, <code>has_hispanic_latino_ethnicity</code></td><td><span class="st xw">crosswalk</span></td><td class="note"><code>bld_ef3__stu_race_ethnicity</code> already applies the federal rule (Hispanic first, then two or more, then the single race). The three sentinel codes are project vars (<code>edu:stu_demos:*_code</code>); unknown maps to MISSING.</td></tr>
+<tr><td class="el">Unit list and grade gate</td><td class="src">FS029 and FS039 populations</td><td><span class="st gap">build gap</span></td><td class="note">The FS052 macro zero-fills every permitted grade today; it has to take the FS039 grade set per unit. Listed in HANDOFF as open.</td></tr>
+<tr><td class="el">Missing counts (−1)</td><td class="src">none</td><td><span class="st gap">build gap</span></td><td class="note">Not implemented in <code>edfacts_counts</code>; needed only when a category is unavailable.</td></tr>
+</tbody></table></div>
+
+<div class="keylist">
+  <span><span class="st ok">ready</span> column exists with the right meaning</span>
+  <span><span class="st xw">crosswalk</span> column exists; seed maps descriptor → permitted value</span>
+  <span><span class="st gap">build gap</span> small warehouse or extension addition</span>
+  <span><span class="st man">manual</span> no core Ed-Fi source; overrides seed or typed into EDPass</span>
+</div>
+
+<h2>What the evaluation says</h2>
+<div class="notes">
+  <div class="note"><b>FS039 and FS052 are build-ready</b><p>Every element has a column. The work is five crosswalk seeds, the FS039 grade gate in the FS052 macro, and the −1 rule. Nothing has to change in edu_wh for the two target files.</p></div>
+  <div class="note"><b>The precursor is where the manual work sits</b><p>FS029 needs one new staging flatten (institution telephones) and an overrides seed for the five fields core Ed-Fi lacks: authorizer ids, reconstituted status, dated status changes, prior ids. All four files share the same unit list, so build the directory population once and reuse it.</p></div>
+  <div class="note"><b>Two warehouse behaviours to know</b><p>Org staging dedupes to the latest API year, so a rerun for a past year reports today's operational status. And <code>dim_student</code> is one row per student-year with the latest grade, so Membership must take grade from the enrollment it counts.</p></div>
+</div>
+</main>
